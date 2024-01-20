@@ -29,7 +29,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
-    frontRight = new SwerveModule(5,14);
+    frontRight = new SwerveModule(5,14,0);
     intakeTop = new CANSparkMax(31, MotorType.kBrushed);
     intakeBottom = new CANSparkMax(13, MotorType.kBrushed);
   }
@@ -61,6 +61,7 @@ public class Robot extends TimedRobot {
       intakeTop.set(0);
       intakeBottom.set(0);
     }
+    System.out.println(frontRight.getEncoderAngle());
 
   }
 
