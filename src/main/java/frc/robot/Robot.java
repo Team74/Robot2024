@@ -61,8 +61,7 @@ public class Robot extends TimedRobot {
       intakeTop.set(0);
       intakeBottom.set(0);
     }
-    System.out.println(frontRight.getEncoderAngle());
-
+    frontRight.setPIDLoop();
   }
 
   @Override
