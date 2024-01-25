@@ -21,15 +21,16 @@ public class SwerveModule {
     GenericEntry kpField = driveTab.add("Kp Field", 0).getEntry();
     GenericEntry kiField = driveTab.add("Ki Field", 0).getEntry();
     GenericEntry kdField = driveTab.add("Kd Field", 0).getEntry();
-    GenericEntry targetAngle = driveTab.add("Target", 0).getEntry();
+    GenericEntry targetAngleField = driveTab.add("Target", 0).getEntry();
     GenericEntry currentAngle = driveTab.add("Current", 0).getEntry();
     GenericEntry tolerance = driveTab.add("Tolerance", 100).getEntry();
     GenericEntry posError = driveTab.add("Position Error", 0).getEntry();
-
+    GenericEntry powerField = driveTab.add("Power", 0).getEntry();
 
     public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, tol;
     AnalogInput encoder;
     PIDController pidController = new PIDController(0, 0, 0);
+    double lastTarget, targetAngle;
 
     CANSparkMax driveMotorCont;
     CANSparkMax turnMotorCont;
@@ -62,6 +63,7 @@ public class SwerveModule {
     double i = kiField.getDouble(0);
     double d = kdField.getDouble(0);
     double t = tolerance.getDouble(0);
+    double tar = targetAngleField.getDouble(0);
 
     currentAngle.setDouble(getEncoderAngle());
     posError.setDouble(pidController.getPositionError());
@@ -71,10 +73,28 @@ public class SwerveModule {
     if((i != kI)) { pidController.setI(i); kI = i; }
     if((d != kD)) { pidController.setD(d); kD = d; }
     if((t != tol)) { pidController.setTolerance(t); tol = t; }
+    if((tar != lastTarget)) {
+        pidController.calculate(getEncoderAngle(), tar);
+        double posErrorAbs = Math.abs(pidController.getPositionError());
+         if(posErrorAbs > 1024)
+    {
+        targetAngle = tar + 2048;
+        targetAngle = targetAngle % 4096;
+    }else{
+        targetAngle = tar;
+    }
+     }
     
+<<<<<<< HEAD
     
+=======
+    //double targetAngle = targetAngleField.getDouble(0);
+    
+    double power = pidController.calculate(getEncoderAngle(), targetAngle);
+    powerField.setDouble(power);
+>>>>>>> 6bc250405bbf7486e8099b18330997cc323e813f
         if (!pidController.atSetpoint()) {
-            turnMotorCont.set(MathUtil.clamp(pidController.calculate(getEncoderAngle(), targetAngle.getDouble(0)), -0.5, 0.5));
+           turnMotorCont.set(-1*MathUtil.clamp(power, -0.2, 0.2));
         } else {
             turnMotorCont.set(0);
         }
