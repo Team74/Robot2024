@@ -72,6 +72,7 @@ public class SwerveModule {
     if((d != kD)) { pidController.setD(d); kD = d; }
     if((t != tol)) { pidController.setTolerance(t); tol = t; }
     
+    
         if (!pidController.atSetpoint()) {
             turnMotorCont.set(MathUtil.clamp(pidController.calculate(getEncoderAngle(), targetAngle.getDouble(0)), -0.5, 0.5));
         } else {
