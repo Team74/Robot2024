@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SwerveModule {
 
+    //Adding the tabs to the SuffleBoard. Some off these are inputs for the PID Loop
     ShuffleboardTab driveTab = Shuffleboard.getTab("Drive");
     GenericEntry kpField = driveTab.add("Kp Field", 0).getEntry();
     GenericEntry kiField = driveTab.add("Ki Field", 0).getEntry();
@@ -26,11 +27,13 @@ public class SwerveModule {
     GenericEntry tolerance = driveTab.add("Tolerance", 100).getEntry();
     GenericEntry posError = driveTab.add("Position Error", 0).getEntry();
     GenericEntry powerField = driveTab.add("Power", 0).getEntry();
+    GenericEntry encoderOffsetField = driveTab.add("Encoder Offset", 0).getEntry();
 
     public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, tol;
-    AnalogInput encoder;
+    // AnalogInput encoder;
+    Encoder testEncoder;
     PIDController pidController = new PIDController(0, 0, 0);
-    double lastTarget, targetAngle;
+    double lastTarget, targetAngle, encoderOffset;
 
     CANSparkMax driveMotorCont;
     CANSparkMax turnMotorCont;
@@ -38,8 +41,10 @@ public class SwerveModule {
     SwerveModule(int driveId, int turnId, int encoderId) {
         turnMotorCont = new CANSparkMax(turnId, MotorType.kBrushless);
         driveMotorCont = new CANSparkMax(driveId, MotorType.kBrushless);
-        encoder = new AnalogInput(encoderId);
-        encoder.setAverageBits(4);
+        // encoder = new AnalogInput(encoderId);
+        // encoder.setAverageBits(4);
+        testEncoder = new Encoder(encoderId);
+        testEncoder.encoderInit();
         PIDInit();
     }
 
@@ -47,54 +52,64 @@ public class SwerveModule {
         driveMotorCont.set(driveSpeed);
     }
 
-    int getEncoderAngle(){
-        return encoder.getAverageValue();
+    int getEncoderAngle() {
+        // return encoder.getAverageValue();
+        return testEncoder.getAverageValue();
     }
 
-    void PIDInit()
-    {
-        pidController.enableContinuousInput(0,4096);
+    void PIDInit() {
+        pidController.enableContinuousInput(0, testEncoder.encoderMax);
         pidController.setTolerance(100);
     }
 
-    void setPIDLoop(){
+    void setPIDLoop() {
         // read PID coefficients from SmartDashboard
-    double p = kpField.getDouble(0);
-    double i = kiField.getDouble(0);
-    double d = kdField.getDouble(0);
-    double t = tolerance.getDouble(0);
-    double tar = targetAngleField.getDouble(0);
+        double p = kpField.getDouble(0);
+        double i = kiField.getDouble(0);
+        double d = kdField.getDouble(0);
+        double t = tolerance.getDouble(0);
+        double tar = targetAngleField.getDouble(0);
 
-    currentAngle.setDouble(getEncoderAngle());
-    posError.setDouble(pidController.getPositionError());
+        currentAngle.setDouble(getEncoderAngle());
+        posError.setDouble(pidController.getPositionError());
 
-    // if PID coefficients on SmartDashboard have changed, write new values to controller
-    if((p != kP)) { pidController.setP(p); kP = p; }
-    if((i != kI)) { pidController.setI(i); kI = i; }
-    if((d != kD)) { pidController.setD(d); kD = d; }
-    if((t != tol)) { pidController.setTolerance(t); tol = t; }
-    if((tar != lastTarget)) {
-        pidController.calculate(getEncoderAngle(), tar);
-        double posErrorAbs = Math.abs(pidController.getPositionError());
-         if(posErrorAbs > 1024)
-    {
-        targetAngle = tar + 2048;
-        targetAngle = targetAngle % 4096;
-    }else{
-        targetAngle = tar;
+        // if PID coefficients on SmartDashboard have changed, write new values to
+        // controller
+        if ((p != kP)) {
+            pidController.setP(p);
+            kP = p;
+        }
+        if ((i != kI)) {
+            pidController.setI(i);
+            kI = i;
+        }
+        if ((d != kD)) {
+            pidController.setD(d);
+            kD = d;
+        }
+        if ((t != tol)) {
+            pidController.setTolerance(t);
+            tol = t;
+        }
+        if ((tar != lastTarget)) {
+            pidController.calculate(getEncoderAngle(), tar);
+            double posErrorAbs = Math.abs(pidController.getPositionError());
+            if (posErrorAbs > testEncoder.encoderMax / 4) {
+                targetAngle = tar + testEncoder.encoderMax / 2;
+                targetAngle = targetAngle % testEncoder.encoderMax;
+            } else {
+                targetAngle = tar;
+            }
+        }
+        setModulePower(1,targetAngle);
     }
-     }
-    
-<<<<<<< HEAD
-    
-=======
-    //double targetAngle = targetAngleField.getDouble(0);
-    
-    double power = pidController.calculate(getEncoderAngle(), targetAngle);
-    powerField.setDouble(power);
->>>>>>> 6bc250405bbf7486e8099b18330997cc323e813f
+
+    void setModulePower(double powerMulti, double targetAngle){
+        targetAngle = targetAngle - encoderOffset;
+        double powerFinal = (pidController.calculate(getEncoderAngle(), targetAngle) * powerMulti);
+        powerField.setDouble(powerFinal);
         if (!pidController.atSetpoint()) {
-           turnMotorCont.set(-1*MathUtil.clamp(power, -0.2, 0.2));
+            turnMotorCont.set(-1 * MathUtil.clamp(powerFinal, -0.2, 0.2));
         } else {
             turnMotorCont.set(0);
         }
