@@ -25,11 +25,12 @@ public class Robot extends TimedRobot {
    SwerveDrive driveTrain;
    CANSparkMax intakeTop;
    CANSparkMax intakeBottom; 
-   XboxController driverController = new XboxController(0);
+   DriverController driverController;
 
   @Override
   public void robotInit() {
     driveTrain = new SwerveDrive();
+    driverController = new DriverController(driveTrain);
     intakeTop = new CANSparkMax(31, MotorType.kBrushed);
     intakeBottom = new CANSparkMax(13, MotorType.kBrushed);
   }
@@ -49,19 +50,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     //frontRight.setDrive(0.25);
-
-    if(driverController.getRightTriggerAxis() > 0.1)
-    {
-      intakeTop.set(driverController.getRightTriggerAxis() * 0.4);
-      intakeBottom.set(driverController.getRightTriggerAxis() * -1);
-    }else if(driverController.getBButton()){
-      intakeTop.set(-0.5);
-      intakeBottom.set(0.5);
-    }else{
-      intakeTop.set(0);
-      intakeBottom.set(0);
-    }
-    driveTrain.driveSet(0,0.5,0.5);
+    driverController.run();
   }
 
   @Override
