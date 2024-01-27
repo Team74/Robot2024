@@ -66,7 +66,7 @@ public class SwerveModule {
 
     void PIDInit() {
         pidController.enableContinuousInput(0, 4096);
-        pidController.setTolerance(100);
+        pidController.setTolerance(200);
         pidController.setD(0.05);
         //setPIDLoop();
     }
