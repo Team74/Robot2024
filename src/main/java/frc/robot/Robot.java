@@ -26,10 +26,12 @@ public class Robot extends TimedRobot {
    CANSparkMax intakeTop;
    CANSparkMax intakeBottom; 
    DriverController driverController;
+   SwerveModule testSwerveModule;
 
   @Override
   public void robotInit() {
     driveTrain = new SwerveDrive();
+    //testSwerveModule = new SwerveModule(5, 14, 0);
     driverController = new DriverController(driveTrain);
     intakeTop = new CANSparkMax(31, MotorType.kBrushed);
     intakeBottom = new CANSparkMax(13, MotorType.kBrushed);
@@ -51,6 +53,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     //frontRight.setDrive(0.25);
     driverController.run();
+    //testSwerveModule.setModulePower(1, 0);
   }
 
   @Override
