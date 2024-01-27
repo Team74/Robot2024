@@ -5,6 +5,9 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 public class SwerveDrive {
     SwerveModule frontRight;
@@ -12,6 +15,18 @@ public class SwerveDrive {
     SwerveModule backRight;
     SwerveModule backLeft;
     SwerveDriveKinematics driveLocation;
+
+    public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, tol;
+    ShuffleboardTab driveTab = Shuffleboard.getTab("Drive");
+    GenericEntry kpField = driveTab.add("Kp Field", 0).getEntry();
+    GenericEntry kiField = driveTab.add("Ki Field", 0).getEntry();
+    GenericEntry kdField = driveTab.add("Kd Field", 0).getEntry();
+    GenericEntry targetAngleField = driveTab.add("Target", 0).getEntry();
+    GenericEntry currentAngleField = driveTab.add("Current", 0).getEntry();
+    GenericEntry toleranceField = driveTab.add("Tolerance", 100).getEntry();
+    GenericEntry posErrorField = driveTab.add("Position Error", 0).getEntry();
+    GenericEntry powerField = driveTab.add("Power", 0).getEntry();
+    GenericEntry encoderOffsetField = driveTab.add("Encoder Offset", 0).getEntry();
 
     SwerveDrive() {
         frontRight = new SwerveModule(5, 14, 0);
@@ -47,5 +62,33 @@ public class SwerveDrive {
         var backRightOptimized = SwerveModuleState.optimize(backRightState, new Rotation2d(backRight.getEncoderAngleRadians()));
 
         frontLeft.setDrive(frontLeftOptimized.speedMetersPerSecond, frontLeftOptimized.angle);
+    }
+
+    void setPIDLoop(SwerveModule swerveModule){
+         // read PID coefficients from SmartDashboard
+         double p = kpField.getDouble(0);
+         double i = kiField.getDouble(0);
+         double d = kdField.getDouble(0);
+         double t = toleranceField.getDouble(0);
+  
+         // if PID coefficients on SmartDashboard have changed, write new values to
+         // controller
+         if ((p != kP)) {
+            swerveModule.setPIDP(p);
+             kP = p;
+         }
+         if ((i != kI)) {
+            swerveModule.setPIDI(i);
+             kI = i;
+         }
+         if ((d != kD)) {
+            swerveModule.setPIDD(d);
+             kD = d;
+         }
+         if ((t != tol)) {
+            swerveModule.setPIDTol(tol);
+             tol = t;
+         }
+        
     }
 }
