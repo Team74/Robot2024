@@ -22,14 +22,14 @@ public class Robot extends TimedRobot {
    * initialization code.
    */
 
-   SwerveModule frontRight;
+   SwerveDrive driveTrain;
    CANSparkMax intakeTop;
    CANSparkMax intakeBottom; 
    XboxController driverController = new XboxController(0);
 
   @Override
   public void robotInit() {
-    frontRight = new SwerveModule(5,14,0);
+    driveTrain = new SwerveDrive();
     intakeTop = new CANSparkMax(31, MotorType.kBrushed);
     intakeBottom = new CANSparkMax(13, MotorType.kBrushed);
   }
@@ -61,7 +61,7 @@ public class Robot extends TimedRobot {
       intakeTop.set(0);
       intakeBottom.set(0);
     }
-    frontRight.setPIDLoop();
+    driveTrain.driveSet(0,0.5,0.5);
   }
 
   @Override
