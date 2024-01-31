@@ -31,6 +31,8 @@ public class SwerveModule {
     CANSparkMax driveMotorCont;
     CANSparkMax turnMotorCont;
 
+    SparkPIDController drivePID;
+
     GenericEntry currentDisplayField;
 
     SwerveModule(int driveId, int turnId, int encoderId, int offset, GenericEntry currentDisplay) {
@@ -50,9 +52,10 @@ public class SwerveModule {
         setModulePower(1, targetAngle, print);
 
         double targetSpeed = MathUtil.clamp(driveSpeed,-1,1) * 5600 * 0.5; //driver speed gives -1 to 1, multiply by encoder ticks, then speed mutilplier
-        double calc = drivePIDController.calculate(driveMotorCont.getEncoder().getVelocity(), targetSpeed);
+        drivePID.setReference(targetSpeed, CANSparkMax.ControlType.kVelocity);
+        /*double calc = drivePIDController.calculate(driveMotorCont.getEncoder().getVelocity(), targetSpeed);
         System.out.println("test2: " + (calc));
-        driveMotorCont.set(MathUtil.clamp(calc, -1, 1));
+        driveMotorCont.set(MathUtil.clamp(calc, -1, 1));*/
         if(print){
         //System.out.println(driveMotorCont.getEncoder().getVelocity());
         }
@@ -76,11 +79,30 @@ public class SwerveModule {
         pidController.setI(0);
         pidController.setP(0.0005);
 
-        drivePIDController.reset();
+        /*drivePIDController.reset();
         drivePIDController.setTolerance(200);
         drivePIDController.setD(0);
         drivePIDController.setI(0);
-        drivePIDController.setP(0.00025);
+        drivePIDController.setP(0.00025);*/
+         // PID coefficients
+
+        driveMotorCont.restoreFactoryDefaults();
+        drivePID = driveMotorCont.getPIDController(); 
+
+        kP = 0.000000; 
+        kI = 0;
+        kD = 0.000000; 
+        kIz = 0; 
+        kFF = 0.001050; 
+        kMaxOutput = 0.95; 
+        kMinOutput = -0.95;
+ 
+        drivePID.setP(kP);
+        drivePID.setI(kI);
+        drivePID.setD(kD);
+        drivePID.setIZone(kIz);
+        drivePID.setFF(kFF);
+        drivePID.setOutputRange(kMinOutput, kMaxOutput);
     }
 
     //These are called from the Swerve Drive Class
