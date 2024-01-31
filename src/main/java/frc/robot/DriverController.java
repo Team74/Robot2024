@@ -14,7 +14,7 @@ public class DriverController {
         void run (){
         double transX = -controller.getLeftX();
         double transY = controller.getLeftY();
-        double rotatX = controller.getRightX();
+        double rotatX = -controller.getRightX();
         drive.driveSet(rotatX,transY,transX);
     }
 }

@@ -24,6 +24,7 @@ public class SwerveModule {
     // AnalogInput encoder;
     Encoder testEncoder;
     PIDController pidController = new PIDController(0, 0, 0.05);
+    PIDController drivePIDController = new PIDController(0, 0, 0.05);
     double lastTarget;
     int targetAngle, encoderOffset;
 
@@ -47,6 +48,14 @@ public class SwerveModule {
        // System.out.println("turn angle rad " + turnAngle.getRadians());
         targetAngle = (int) ((turnAngle.getRadians() + Math.PI)/ (2 * Math.PI) * testEncoder.encoderMax); //convert the radians to encoder tick
         setModulePower(1, targetAngle, print);
+
+        double targetSpeed = MathUtil.clamp(driveSpeed,-1,1) * 5600 * 0.5; //driver speed gives -1 to 1, multiply by encoder ticks, then speed mutilplier
+        double calc = drivePIDController.calculate(driveMotorCont.getEncoder().getVelocity(), targetSpeed);
+        System.out.println("test2: " + (calc));
+        driveMotorCont.set(MathUtil.clamp(calc, -1, 1));
+        if(print){
+        //System.out.println(driveMotorCont.getEncoder().getVelocity());
+        }
         //currentDisplayField.setInteger(getEncoderAngle());
     }
 
@@ -66,20 +75,30 @@ public class SwerveModule {
         pidController.setD(0);
         pidController.setI(0);
         pidController.setP(0.0005);
+
+        drivePIDController.reset();
+        drivePIDController.setTolerance(200);
+        drivePIDController.setD(0);
+        drivePIDController.setI(0);
+        drivePIDController.setP(0.00025);
     }
 
     //These are called from the Swerve Drive Class
-    void setPIDP(double p){
+    void setPIDP(double p, double driveP){
         pidController.setP(p);
+        drivePIDController.setP(driveP);
     }
-     void setPIDI(double i){
+     void setPIDI(double i, double driveI){
         pidController.setI(i);
+        drivePIDController.setI(driveI);
     }
-     void setPIDD(double d){
+     void setPIDD(double d, double driveD){
         pidController.setD(d);
+        drivePIDController.setD(driveD);
     }
-    void setPIDTol(double tol){
+    void setPIDTol(double tol, double driveTol){
         pidController.setTolerance(tol);
+        drivePIDController.setTolerance(driveTol);
     }
 
     void setModulePower(double powerMulti, int targetAngle, Boolean print){

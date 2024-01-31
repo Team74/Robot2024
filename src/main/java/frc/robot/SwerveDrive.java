@@ -35,12 +35,12 @@ public class SwerveDrive {
     SwerveDrive() {
         frontRight = new SwerveModule(5, 14, 0, 2925, fr_currentAngleField);
         frontLeft = new SwerveModule(44, 4, 3, 3713, fl_currentAngleField);
-        backRight = new SwerveModule(12, 15, 1, 2939, br_currentAngleField);
+        backRight = new SwerveModule(12, 15, 1, 2939-2048, br_currentAngleField);
         backLeft = new SwerveModule(11, 3, 2, 1008, bl_currentAngleField);
-        Translation2d frontRightLocation = new Translation2d(119, 103);
-        Translation2d frontLeftLocation = new Translation2d(119, -103);
-        Translation2d backRightLocation = new Translation2d(-119, 103);
-        Translation2d backLeftLocation = new Translation2d(-119, -103);
+        Translation2d frontRightLocation = new Translation2d(119, 119); //119, 103
+        Translation2d frontLeftLocation = new Translation2d(119, -119);
+        Translation2d backRightLocation = new Translation2d(-119, 119);
+        Translation2d backLeftLocation = new Translation2d(-119, -119);
         driveLocation = new SwerveDriveKinematics(
                 frontLeftLocation, frontRightLocation, backLeftLocation, backRightLocation);
     }
@@ -65,13 +65,14 @@ public class SwerveDrive {
         var backLeftOptimized = SwerveModuleState.optimize(backLeftState, new Rotation2d(backLeft.getEncoderAngleRadians()));
         var backRightOptimized = SwerveModuleState.optimize(backRightState, new Rotation2d(backRight.getEncoderAngleRadians()));
 
-        frontLeft.setDrive(frontLeftOptimized.speedMetersPerSecond, frontLeftOptimized.angle, true);
-        frontRight.setDrive(frontRightOptimized.speedMetersPerSecond, frontRightOptimized.angle, true);
-        backLeft.setDrive(backLeftOptimized.speedMetersPerSecond, backLeftOptimized.angle, true);
-        backRight.setDrive(backRightOptimized.speedMetersPerSecond, backRightOptimized.angle, true);
+        frontLeft.setDrive(frontLeftOptimized.speedMetersPerSecond, frontLeftOptimized.angle, false);
+        frontRight.setDrive(frontRightOptimized.speedMetersPerSecond, frontRightOptimized.angle, false);
+        backLeft.setDrive(-backLeftOptimized.speedMetersPerSecond, backLeftOptimized.angle, false); //negitive due to issue. TODO Fix it
+        backRight.setDrive(-backRightOptimized.speedMetersPerSecond, backRightOptimized.angle, true); //negitive due to issue. TODO Fix it
         //setPIDLoop(frontLeft);
         fl_currentAngleField.setInteger(frontLeft.getEncoderAngle());
-        System.out.println("FR " + frontRight.getEncoderAngle() + "BR " + backRight.getEncoderAngle() + "BL " + backLeft.getEncoderAngle());
+        //System.out.println("FR " + frontRight.getEncoderAngle() + "BR " + backRight.getEncoderAngle() + "BL " + backLeft.getEncoderAngle());
+        //System.out.println("Test" + frontLeftOptimized.speedMetersPerSecond);
     }
 
    /*void setPIDLoop(SwerveModule swerveModule){
