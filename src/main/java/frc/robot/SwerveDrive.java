@@ -46,7 +46,7 @@ public class SwerveDrive {
     }
 
     void driveSet(double rotatX, double transY, double transX) {
-        ChassisSpeeds wheelSpeed = new ChassisSpeeds(transY, transX, rotatX);
+        ChassisSpeeds wheelSpeed = new ChassisSpeeds(transY, transX, rotatX/4);
         SwerveModuleState[] moduleStates = driveLocation.toSwerveModuleStates(wheelSpeed);
         // Front left module state
         SwerveModuleState frontLeftState = moduleStates[0];
