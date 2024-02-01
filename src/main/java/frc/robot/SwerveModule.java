@@ -51,7 +51,7 @@ public class SwerveModule {
         targetAngle = (int) ((turnAngle.getRadians() + Math.PI)/ (2 * Math.PI) * testEncoder.encoderMax); //convert the radians to encoder tick
         setModulePower(1, targetAngle, print);
 
-        double targetSpeed = MathUtil.clamp(driveSpeed,-1,1) * 5600 * 0.5; //driver speed gives -1 to 1, multiply by encoder ticks, then speed mutilplier
+        double targetSpeed = MathUtil.clamp(driveSpeed,-1,1) * 5600 * 0.1; //driver speed gives -1 to 1, multiply by encoder ticks, then speed mutilplier
         drivePID.setReference(targetSpeed, CANSparkMax.ControlType.kVelocity);
         /*double calc = drivePIDController.calculate(driveMotorCont.getEncoder().getVelocity(), targetSpeed);
         System.out.println("test2: " + (calc));
