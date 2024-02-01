@@ -23,10 +23,9 @@ public class Robot extends TimedRobot {
    */
 
    SwerveDrive driveTrain;
-   CANSparkMax intakeTop;
-   CANSparkMax intakeBottom; 
+   CANSparkMax intakeTop, intakeBottom; 
    DriverController driverController;
-   SwerveModule testSwerveModule;
+   SwerveModule testSwerveModule; //this is a test module
 
   @Override
   public void robotInit() {

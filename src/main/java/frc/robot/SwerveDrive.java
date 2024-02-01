@@ -16,18 +16,13 @@ public class SwerveDrive {
     SwerveModule backLeft;
     SwerveDriveKinematics driveLocation;
 
-    public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, tol;
-    ShuffleboardTab driveTab = Shuffleboard.getTab("Drive2");
-    /*GenericEntry kpField = driveTab.add("Kp Field", 0).getEntry();
-    GenericEntry kiField = driveTab.add("Ki Field", 0).getEntry();
-    GenericEntry kdField = driveTab.add("Kd Field", 0.05).getEntry();
-    GenericEntry targetAngleField = driveTab.add("Target", 0).getEntry();
-    GenericEntry toleranceField = driveTab.add("Tolerance", 100).getEntry();
-    GenericEntry posErrorField = driveTab.add("Position Error", 0).getEntry();
-    GenericEntry powerField = driveTab.add("Power", 0).getEntry();
-    GenericEntry encoderOffsetField = driveTab.add("Encoder Offset", 0).getEntry();*/
+    double powerMulti = 1;
 
-     GenericEntry fl_currentAngleField = driveTab.add("Front Left Current", 0).getEntry();
+    public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, tol; //the PID loop doubles 
+    ShuffleboardTab driveTab = Shuffleboard.getTab("Drive2");
+
+    //adding the current encoder values to shuffle board. TODO add a way to change PID loop from shuffle board
+    GenericEntry fl_currentAngleField = driveTab.add("Front Left Current", 0).getEntry();
     GenericEntry fr_currentAngleField = driveTab.add("Front Right Current", 0).getEntry();
     GenericEntry bl_currentAngleField = driveTab.add("Back Left Current", 0).getEntry();
     GenericEntry br_currentAngleField = driveTab.add("Back Right Current", 0).getEntry();
@@ -46,7 +41,7 @@ public class SwerveDrive {
     }
 
     void driveSet(double rotatX, double transY, double transX) {
-        ChassisSpeeds wheelSpeed = new ChassisSpeeds(transY, transX, rotatX/150);
+        ChassisSpeeds wheelSpeed = new ChassisSpeeds(transY, transX, rotatX/150); //we are dividing the value as it is way to fast otherwise
         SwerveModuleState[] moduleStates = driveLocation.toSwerveModuleStates(wheelSpeed);
         // Front left module state
         SwerveModuleState frontLeftState = moduleStates[0];
@@ -65,41 +60,20 @@ public class SwerveDrive {
         var backLeftOptimized = SwerveModuleState.optimize(backLeftState, new Rotation2d(backLeft.getEncoderAngleRadians()));
         var backRightOptimized = SwerveModuleState.optimize(backRightState, new Rotation2d(backRight.getEncoderAngleRadians()));
 
-        frontLeft.setDrive(frontLeftOptimized.speedMetersPerSecond, frontLeftOptimized.angle, false);
-        frontRight.setDrive(frontRightOptimized.speedMetersPerSecond, frontRightOptimized.angle, false);
-        backLeft.setDrive(-backLeftOptimized.speedMetersPerSecond, backLeftOptimized.angle, false); //negitive due to issue. TODO Fix it
-        backRight.setDrive(-backRightOptimized.speedMetersPerSecond, backRightOptimized.angle, true); //negitive due to issue. TODO Fix it
-        //setPIDLoop(frontLeft);
-        fl_currentAngleField.setInteger(frontLeft.getEncoderAngle());
-        //System.out.println("FR " + frontRight.getEncoderAngle() + "BR " + backRight.getEncoderAngle() + "BL " + backLeft.getEncoderAngle());
-        //System.out.println("Test" + frontLeftOptimized.speedMetersPerSecond);
+        frontLeft.setDrive(frontLeftOptimized.speedMetersPerSecond, frontLeftOptimized.angle, powerMulti, false);
+        frontRight.setDrive(frontRightOptimized.speedMetersPerSecond, frontRightOptimized.angle, powerMulti,false);
+        backLeft.setDrive(-backLeftOptimized.speedMetersPerSecond, backLeftOptimized.angle, powerMulti,false); //negitive due to issue. TODO Fix it
+        backRight.setDrive(-backRightOptimized.speedMetersPerSecond, backRightOptimized.angle, powerMulti,true); //negitive due to issue. TODO Fix it
+        
+        addDataToShuffle();
     }
 
-   /*void setPIDLoop(SwerveModule swerveModule){
-         // read PID coefficients from SmartDashboard
-         double p = kpField.getDouble(0);
-         double i = kiField.getDouble(0);
-         double d = kdField.getDouble(0.05);
-         double t = toleranceField.getDouble(50);
-  
-         // if PID coefficients on SmartDashboard have changed, write new values to
-         // controller
-         if ((p != kP)) {
-            swerveModule.setPIDP(p);
-             kP = p;
-         }
-         if ((i != kI)) {
-            swerveModule.setPIDI(i);
-             kI = i;
-         }
-         if ((d != kD)) {
-            swerveModule.setPIDD(d);
-             kD = d;
-         }
-         if ((t != tol)) {
-            swerveModule.setPIDTol(tol);
-             tol = t;
-         }
-        
-    }*/
+    //Adding the data from the swerve modules to the shuffle board
+    void addDataToShuffle()
+    {
+        fl_currentAngleField.setInteger(frontLeft.getEncoderAngle());
+        fr_currentAngleField.setInteger(frontRight.getEncoderAngle());
+        bl_currentAngleField.setInteger(backLeft.getEncoderAngle());
+        br_currentAngleField.setInteger(backRight.getEncoderAngle());
+    }
 }
