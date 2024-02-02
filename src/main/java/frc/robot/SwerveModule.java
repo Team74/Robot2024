@@ -21,9 +21,8 @@ public class SwerveModule {
     //Adding the tabs to the SuffleBoard. Some off these are inputs for the PID Loop
 
     public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, tol;
-    // AnalogInput encoder;
     Encoder testEncoder;
-    PIDController pidController = new PIDController(0, 0, 0.05);
+    PIDController anglePIDController = new PIDController(0, 0, 0.05);
     PIDController drivePIDController = new PIDController(0, 0, 0.05);
     double lastTarget;
     int targetAngle, encoderOffset;
@@ -42,53 +41,44 @@ public class SwerveModule {
         testEncoder.encoderInit();
         PIDInit();
         encoderOffset = offset;
-
-        //currentDisplayField = currentDisplay;
     }
 
-    void setDrive(double driveSpeed, Rotation2d turnAngle, Boolean print) {
-       // System.out.println("turn angle rad " + turnAngle.getRadians());
+    void setDrive(double driveSpeed, Rotation2d turnAngle, double powerMulti, Boolean print) {
         targetAngle = (int) ((turnAngle.getRadians() + Math.PI)/ (2 * Math.PI) * testEncoder.encoderMax); //convert the radians to encoder tick
-        setModulePower(1, targetAngle, print);
+        setAngleMotorPower(powerMulti, targetAngle, print); //set the motor power 
 
-        double targetSpeed = MathUtil.clamp(driveSpeed,-1,1) * 5600 * 0.1; //driver speed gives -1 to 1, multiply by encoder ticks, then speed mutilplier
-        drivePID.setReference(targetSpeed, CANSparkMax.ControlType.kVelocity);
-        /*double calc = drivePIDController.calculate(driveMotorCont.getEncoder().getVelocity(), targetSpeed);
-        System.out.println("test2: " + (calc));
-        driveMotorCont.set(MathUtil.clamp(calc, -1, 1));*/
+        double targetSpeed = MathUtil.clamp(driveSpeed,-1,1) * 5600 * 0.1; //driver speed gives -1 to 1, multiply by encoder ticks, then speed multiplier
+        drivePID.setReference(targetSpeed * powerMulti, CANSparkMax.ControlType.kVelocity); //set reference as it is velocity not position 
+
+        //if you want to print something to console, do it here.
         if(print){
-        //System.out.println(driveMotorCont.getEncoder().getVelocity());
+        
         }
-        //currentDisplayField.setInteger(getEncoderAngle());
     }
 
     int getEncoderAngle() {
+        System.out.println("Test 1: " + testEncoder.getAverageValue());
         return testEncoder.getAverageValue() - encoderOffset; //we get it from this so if the encoder changes it wont effect this class. 
     }
     double getEncoderAngleRadians() //converts the encoder ticks to radians
-    {
-       // System.out.println("encoder rad " + (((( (double) getEncoderAngle()/(testEncoder.encoderMax)) * Math.PI * 2)) - Math.PI));    
+    { 
         return ((( (double) getEncoderAngle()/(testEncoder.encoderMax)) * Math.PI * 2)) -Math.PI;
     }
 
     void PIDInit() {
-        pidController.reset();
-        pidController.enableContinuousInput(0, 4096);
-        pidController.setTolerance(60);
-        pidController.setD(0);
-        pidController.setI(0);
-        pidController.setP(0.0005);
 
-        /*drivePIDController.reset();
-        drivePIDController.setTolerance(200);
-        drivePIDController.setD(0);
-        drivePIDController.setI(0);
-        drivePIDController.setP(0.00025);*/
-         // PID coefficients
+        //the angle PID is on the rio, so we have to set everything manually
+        anglePIDController.reset();
+        anglePIDController.enableContinuousInput(0, 4096); //this means that when it hits 0, it will go to 4096. It acts like a circle
+        anglePIDController.setTolerance(60);
+        anglePIDController.setD(0);
+        anglePIDController.setI(0);
+        anglePIDController.setP(0.0005);
 
-        driveMotorCont.restoreFactoryDefaults();
+        driveMotorCont.restoreFactoryDefaults(); //clear the previous PID Loop. This is bc the drive motor PID is on the controller
         drivePID = driveMotorCont.getPIDController(); 
 
+        //PID for the drive controller
         kP = 0.000000; 
         kI = 0;
         kD = 0.000000; 
@@ -107,36 +97,38 @@ public class SwerveModule {
 
     //These are called from the Swerve Drive Class
     void setPIDP(double p, double driveP){
-        pidController.setP(p);
+        anglePIDController.setP(p);
         drivePIDController.setP(driveP);
     }
      void setPIDI(double i, double driveI){
-        pidController.setI(i);
+        anglePIDController.setI(i);
         drivePIDController.setI(driveI);
     }
      void setPIDD(double d, double driveD){
-        pidController.setD(d);
+        anglePIDController.setD(d);
         drivePIDController.setD(driveD);
     }
-    void setPIDTol(double tol, double driveTol){
-        pidController.setTolerance(tol);
+    void setPIDTol(double tol, double driveTol){ //tolerance
+        anglePIDController.setTolerance(tol);
         drivePIDController.setTolerance(driveTol);
     }
 
-    void setModulePower(double powerMulti, int targetAngle, Boolean print){
-        //targetAngle = targetAngle + encoderOffset;
-        //System.out.println("tar: " + targetAngle + "  enco: " + getEncoderAngle() + " PID d: " + pidController.getD() + "PID Tol: " + pidController.getPositionTolerance());
-        //System.out.println("Power Final" + pidController.calculate(getEncoderAngle(), targetAngle) + " PID Error: " + pidController.getPositionError());
-        double calc = pidController.calculate(getEncoderAngle(), targetAngle);
-        if(print){
-        //System.out.println("PID Error " + pidController.getPositionError() + " PID Current " + getEncoderAngle() + " PID Target " + targetAngle);
-        //System.out.println("Power Final: " + calc);
-        }
-        double powerFinal = (calc * powerMulti);
-        if (!pidController.atSetpoint()) {
+    void setAngleMotorPower(double powerMulti, int targetAngle, Boolean print){
+
+        //dont call calc 2 times in one cycle, it does not like it 
+        double calc = anglePIDController.calculate(getEncoderAngle(), targetAngle); //get the pid power
+        double powerFinal = (calc * powerMulti); //power multi is the "gear" system, speed up / slow down
+
+        //we do this as we dont want to strain motors or batteries when we are at the setpoint. If we don't do this it will set the power to a very small number
+        if (!anglePIDController.atSetpoint()) {
            turnMotorCont.set(-1 * MathUtil.clamp(powerFinal, -0.2, 0.2));
         } else {
            turnMotorCont.set(0);
+        }
+
+        //if you want to print anything to console, put it here
+        if(print){
+    
         }
     }
 
