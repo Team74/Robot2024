@@ -26,6 +26,7 @@ public class Robot extends TimedRobot {
    CANSparkMax intakeTop, intakeBottom; 
    DriverController driverController;
    SwerveModule testSwerveModule; //this is a test module
+   Encoder testEncoder = new Encoder(5);
 
   @Override
   public void robotInit() {
@@ -51,8 +52,9 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     //frontRight.setDrive(0.25);
-    driverController.run();
+    //driverController.run();
     //testSwerveModule.setModulePower(1, 0);
+    System.out.println(testEncoder.getDoubleValue());
   }
 
   @Override
