@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
@@ -23,7 +24,8 @@ public class Robot extends TimedRobot {
    */
 
    SwerveDrive driveTrain;
-   CANSparkMax intakeTop, intakeBottom; 
+   CANSparkMax intakeTop, intakeBottom;
+   TalonFX falconTest;
    DriverController driverController;
    SwerveModule testSwerveModule; //this is a test module
    Encoder testEncoder = new Encoder(5);
@@ -35,6 +37,7 @@ public class Robot extends TimedRobot {
     driverController = new DriverController(driveTrain);
     intakeTop = new CANSparkMax(31, MotorType.kBrushed);
     intakeBottom = new CANSparkMax(13, MotorType.kBrushed);
+    falconTest = new TalonFX(16);
   }
 
   @Override
@@ -54,7 +57,15 @@ public class Robot extends TimedRobot {
     //frontRight.setDrive(0.25);
     //driverController.run();
     //testSwerveModule.setModulePower(1, 0);
-    System.out.println(testEncoder.getDoubleValue());
+    //System.out.println(testEncoder.getDoubleValue());
+
+    if(driverController.controller.getAButton())
+    {
+      System.out.println("A button pressed");
+      falconTest.set(0.1);
+    }else{
+      falconTest.set(0);
+    }
   }
 
   @Override

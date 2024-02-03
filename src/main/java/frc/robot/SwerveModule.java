@@ -45,7 +45,7 @@ public class SwerveModule {
 
     void setDrive(double driveSpeed, Rotation2d turnAngle, double powerMulti, Boolean print) {
         targetAngle = (int) ((turnAngle.getRadians() + Math.PI)/ (2 * Math.PI) * testEncoder.encoderMax); //convert the radians to encoder tick
-        setAngleMotorPower(powerMulti, targetAngle, print); //set the motor power 
+        setAngleMotorPower(targetAngle, print); //set the motor power 
 
         double targetSpeed = MathUtil.clamp(driveSpeed,-1,1) * 5600 * 0.1; //driver speed gives -1 to 1, multiply by encoder ticks, then speed multiplier
         drivePID.setReference(targetSpeed * powerMulti, CANSparkMax.ControlType.kVelocity); //set reference as it is velocity not position 
@@ -113,11 +113,11 @@ public class SwerveModule {
         drivePIDController.setTolerance(driveTol);
     }
 
-    void setAngleMotorPower(double powerMulti, int targetAngle, Boolean print){
+    void setAngleMotorPower(int targetAngle, Boolean print){
 
         //dont call calc 2 times in one cycle, it does not like it 
         double calc = anglePIDController.calculate(getEncoderAngle(), targetAngle); //get the pid power
-        double powerFinal = (calc * powerMulti); //power multi is the "gear" system, speed up / slow down
+        double powerFinal = (calc); //power multi is the "gear" system, speed up / slow down
 
         //we do this as we dont want to strain motors or batteries when we are at the setpoint. If we don't do this it will set the power to a very small number
         if (!anglePIDController.atSetpoint()) {

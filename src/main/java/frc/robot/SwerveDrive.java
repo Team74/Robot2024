@@ -46,7 +46,7 @@ public class SwerveDrive {
                 frontLeftLocation, frontRightLocation, backLeftLocation, backRightLocation);
     }
 
-    void driveSet(double rotatX, double transY, double transX) {
+    void driveSet(double rotatX, double transY, double transX, double powerMulti) {
 
         ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
             transX, transY, rotatX/275, Rotation2d.fromDegrees(gyro.getAngle()));
