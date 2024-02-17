@@ -34,14 +34,15 @@ public class SwerveDrive {
 
     SwerveDrive() {
         gyro.reset();
-        frontRight = new SwerveModule(5, 14, 0, 2925, fr_currentAngleField);
-        frontLeft = new SwerveModule(44, 4, 3, 3713, fl_currentAngleField);
-        backRight = new SwerveModule(12, 15, 1, 2939-2048, br_currentAngleField);
-        backLeft = new SwerveModule(11, 3, 2, 1008, bl_currentAngleField);
-        Translation2d frontRightLocation = new Translation2d(119, 119); //119, 103
-        Translation2d frontLeftLocation = new Translation2d(119, -119);
-        Translation2d backRightLocation = new Translation2d(-119, 119);
-        Translation2d backLeftLocation = new Translation2d(-119, -119);
+        frontRight = new SwerveModule(11, 10, 3, 3390-2048, fr_currentAngleField);
+        frontLeft = new SwerveModule(16, 19, 0, 3923-2048, fl_currentAngleField);
+        backRight = new SwerveModule(17, 12, 2, 0, br_currentAngleField);
+        backLeft = new SwerveModule(18, 14, 1, 3866-2048, bl_currentAngleField);
+        //positive x means moving forward aka towoard the front of the robot, positive y means moving to the left
+        Translation2d frontRightLocation = new Translation2d(119, -119); //119, 103
+        Translation2d frontLeftLocation = new Translation2d(119, 119);
+        Translation2d backRightLocation = new Translation2d(-119, -119);
+        Translation2d backLeftLocation = new Translation2d(-119, 119);
         driveLocation = new SwerveDriveKinematics(
                 frontLeftLocation, frontRightLocation, backLeftLocation, backRightLocation);
     }
@@ -73,8 +74,8 @@ public class SwerveDrive {
 
         frontLeft.setDrive(frontLeftOptimized.speedMetersPerSecond, frontLeftOptimized.angle, powerMulti, false);
         frontRight.setDrive(frontRightOptimized.speedMetersPerSecond, frontRightOptimized.angle, powerMulti,false);
-        backLeft.setDrive(-backLeftOptimized.speedMetersPerSecond, backLeftOptimized.angle, powerMulti,false); //negitive due to issue. TODO Fix it
-        backRight.setDrive(-backRightOptimized.speedMetersPerSecond, backRightOptimized.angle, powerMulti,true); //negitive due to issue. TODO Fix it
+        backLeft.setDrive(backLeftOptimized.speedMetersPerSecond, backLeftOptimized.angle, powerMulti,false); //negitive due to issue. TODO Fix it
+        backRight.setDrive(backRightOptimized.speedMetersPerSecond, backRightOptimized.angle, powerMulti,true); //negitive due to issue. TODO Fix it
     
         fl_currentAngleField.setInteger((int) gyro.getAngle());
 
@@ -84,7 +85,7 @@ public class SwerveDrive {
     //Adding the data from the swerve modules to the shuffle board
     void addDataToShuffle()
     {
-        fl_currentAngleField.setInteger((int) gyro.getAngle());
+        fl_currentAngleField.setDouble(frontLeft.getEncoderAngle());
         fr_currentAngleField.setInteger(frontRight.getEncoderAngle());
         bl_currentAngleField.setInteger(backLeft.getEncoderAngle());
         br_currentAngleField.setInteger(backRight.getEncoderAngle());

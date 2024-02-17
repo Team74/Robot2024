@@ -29,6 +29,7 @@ public class SwerveModule {
 
     CANSparkMax driveMotorCont;
     CANSparkMax turnMotorCont;
+    Double targetSpeed = 0.0;
 
     SparkPIDController drivePID;
 
@@ -47,7 +48,7 @@ public class SwerveModule {
         targetAngle = (int) ((turnAngle.getRadians() + Math.PI)/ (2 * Math.PI) * testEncoder.encoderMax); //convert the radians to encoder tick
         setAngleMotorPower(targetAngle, print); //set the motor power 
 
-        double targetSpeed = MathUtil.clamp(driveSpeed,-1,1) * 5600 * 0.1; //driver speed gives -1 to 1, multiply by encoder ticks, then speed multiplier
+        targetSpeed = MathUtil.clamp(driveSpeed,-0.95,0.95) * 5600 * 0.1; //driver speed gives -1 to 1, multiply by encoder ticks, then speed multiplier
         drivePID.setReference(targetSpeed * powerMulti, CANSparkMax.ControlType.kVelocity); //set reference as it is velocity not position 
 
         //if you want to print something to console, do it here.
@@ -57,7 +58,9 @@ public class SwerveModule {
     }
 
     int getEncoderAngle() {
-        System.out.println("Test 1: " + testEncoder.getAverageValue());
+        //System.out.println("Test 1: " + testEncoder.getAverageValue());
+        System.out.println("offset" + (encoderOffset));
+        System.out.println("Final" + (testEncoder.getAverageValue() - encoderOffset));
         return testEncoder.getAverageValue() - encoderOffset; //we get it from this so if the encoder changes it wont effect this class. 
     }
     double getEncoderAngleRadians() //converts the encoder ticks to radians
@@ -70,9 +73,9 @@ public class SwerveModule {
         //the angle PID is on the rio, so we have to set everything manually
         anglePIDController.reset();
         anglePIDController.enableContinuousInput(0, 4096); //this means that when it hits 0, it will go to 4096. It acts like a circle
-        anglePIDController.setTolerance(60);
-        anglePIDController.setD(0);
-        anglePIDController.setI(0);
+        anglePIDController.setTolerance(100);
+        anglePIDController.setD(0.000005);
+        anglePIDController.setI(0.0);
         anglePIDController.setP(0.0005);
 
         driveMotorCont.restoreFactoryDefaults(); //clear the previous PID Loop. This is bc the drive motor PID is on the controller
@@ -118,17 +121,17 @@ public class SwerveModule {
         //dont call calc 2 times in one cycle, it does not like it 
         double calc = anglePIDController.calculate(getEncoderAngle(), targetAngle); //get the pid power
         double powerFinal = (calc); //power multi is the "gear" system, speed up / slow down
-
+        //System.out.println("Test 2: " + powerFinal);
         //we do this as we dont want to strain motors or batteries when we are at the setpoint. If we don't do this it will set the power to a very small number
         if (!anglePIDController.atSetpoint()) {
-           turnMotorCont.set(-1 * MathUtil.clamp(powerFinal, -0.2, 0.2));
+           turnMotorCont.set(1 * MathUtil.clamp(powerFinal, -0.2, 0.2));
         } else {
            turnMotorCont.set(0);
         }
 
         //if you want to print anything to console, put it here
         if(print){
-    
+            
         }
     }
 

@@ -35,9 +35,9 @@ public class Robot extends TimedRobot {
     driveTrain = new SwerveDrive();
     //testSwerveModule = new SwerveModule(5, 14, 0);
     driverController = new DriverController(driveTrain);
-    intakeTop = new CANSparkMax(31, MotorType.kBrushed);
-    intakeBottom = new CANSparkMax(13, MotorType.kBrushed);
-    falconTest = new TalonFX(16);
+    //intakeTop = new CANSparkMax(31, MotorType.kBrushed);
+    //intakeBottom = new CANSparkMax(13, MotorType.kBrushed);
+    //falconTest = new TalonFX(16);
   }
 
   @Override
@@ -55,16 +55,16 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     //frontRight.setDrive(0.25);
-    //driverController.run();
+    driverController.run();
     //testSwerveModule.setModulePower(1, 0);
     //System.out.println(testEncoder.getDoubleValue());
 
     if(driverController.controller.getAButton())
     {
       System.out.println("A button pressed");
-      falconTest.set(0.1);
+      //falconTest.set(0.1);
     }else{
-      falconTest.set(0);
+      //falconTest.set(0);
     }
   }
 

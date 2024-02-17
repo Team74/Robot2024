@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.XboxController;
 
 public class DriverController {
@@ -9,8 +10,8 @@ public class DriverController {
 
     XboxController controller;
     SwerveDrive drive;
-    double powerMulti = 1;
-    double gearAmount = 0.25;
+    double powerMulti = 0.4;
+    double gearAmount = 0.2;
     
     //This is the init part, passing the swerve drive in so it can call it later
     DriverController (SwerveDrive drive){
@@ -21,16 +22,16 @@ public class DriverController {
         double transX = controller.getLeftX(); //negitive as left and right were reversed. 
         double transY = controller.getLeftY();
         double rotatX = -controller.getRightX(); //Same as above commet
-        drive.driveSet(rotatX,transY,transX, powerMulti); //this is where the swerve drive code is called. 
+        drive.driveSet(rotatX,transY,-transX, powerMulti); //this is where the swerve drive code is called. 
 
         if(controller.getYButton()){
             drive.resetGyro();
         }
 
-        if(controller.getLeftBumper()){
-            powerMulti = powerMulti - gearAmount;
-        }else if(controller.getRightBumper()){
-            powerMulti = powerMulti + gearAmount;
+        if(controller.getLeftBumperPressed()){
+            powerMulti = MathUtil.clamp(powerMulti - gearAmount, 0.2, 0.6);
+        }else if(controller.getRightBumperPressed()){
+            powerMulti = MathUtil.clamp(powerMulti + gearAmount, 0.2, 0.6);
         }
 
     }
