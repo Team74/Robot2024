@@ -35,6 +35,7 @@ public class Robot extends TimedRobot {
     driveTrain = new SwerveDrive();
     //testSwerveModule = new SwerveModule(5, 14, 0);
     driverController = new DriverController(driveTrain);
+    driveTrain.driveSet(0, 0.5,0.5, 0.5);
     //intakeTop = new CANSparkMax(31, MotorType.kBrushed);
     //intakeBottom = new CANSparkMax(13, MotorType.kBrushed);
     //falconTest = new TalonFX(16);
