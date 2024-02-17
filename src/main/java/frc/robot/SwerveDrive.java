@@ -49,8 +49,11 @@ public class SwerveDrive {
 
     void driveSet(double rotatX, double transY, double transX, double powerMulti) {
 
-        ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
-            transX, transY, rotatX/275, Rotation2d.fromDegrees(gyro.getAngle()));
+       // ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
+           // transX, transY, rotatX/275, Rotation2d.fromDegrees(gyro.getAngle()));
+
+            ChassisSpeeds speeds = new ChassisSpeeds(
+            transX, transY, rotatX/275);
 
         // Now use this in our kinematics
         SwerveModuleState[] moduleStates = driveLocation.toSwerveModuleStates(speeds);
@@ -72,10 +75,10 @@ public class SwerveDrive {
         var backLeftOptimized = SwerveModuleState.optimize(backLeftState, new Rotation2d(backLeft.getEncoderAngleRadians()));
         var backRightOptimized = SwerveModuleState.optimize(backRightState, new Rotation2d(backRight.getEncoderAngleRadians()));
 
-        frontLeft.setDrive(frontLeftOptimized.speedMetersPerSecond, frontLeftOptimized.angle, powerMulti, false);
-        frontRight.setDrive(frontRightOptimized.speedMetersPerSecond, frontRightOptimized.angle, powerMulti,false);
-        backLeft.setDrive(backLeftOptimized.speedMetersPerSecond, backLeftOptimized.angle, powerMulti,false); //negitive due to issue. TODO Fix it
-        backRight.setDrive(backRightOptimized.speedMetersPerSecond, backRightOptimized.angle, powerMulti,true); //negitive due to issue. TODO Fix it
+        //frontLeft.setDrive(frontLeftOptimized.speedMetersPerSecond, frontLeftOptimized.angle, powerMulti, false);
+        //frontRight.setDrive(frontRightOptimized.speedMetersPerSecond, frontRightOptimized.angle, powerMulti,false);
+        //backLeft.setDrive(backLeftOptimized.speedMetersPerSecond, backLeftOptimized.angle, powerMulti,false); //negitive due to issue. TODO Fix it
+        //backRight.setDrive(backRightOptimized.speedMetersPerSecond, backRightOptimized.angle, powerMulti,true); //negitive due to issue. TODO Fix it
     
         fl_currentAngleField.setInteger((int) gyro.getAngle());
 
@@ -85,10 +88,10 @@ public class SwerveDrive {
     //Adding the data from the swerve modules to the shuffle board
     void addDataToShuffle()
     {
-        fl_currentAngleField.setDouble(frontLeft.getEncoderAngle());
-        fr_currentAngleField.setInteger(frontRight.getEncoderAngle());
-        bl_currentAngleField.setInteger(backLeft.getEncoderAngle());
-        br_currentAngleField.setInteger(backRight.getEncoderAngle());
+        fl_currentAngleField.setDouble(frontLeft.testEncoder.getAverageValue());
+        fr_currentAngleField.setInteger(frontRight.testEncoder.getAverageValue());
+        bl_currentAngleField.setInteger(backLeft.testEncoder.getAverageValue());
+        br_currentAngleField.setInteger(backRight.testEncoder.getAverageValue());
     }
 
     void resetGyro()

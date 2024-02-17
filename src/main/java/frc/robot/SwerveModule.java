@@ -61,7 +61,7 @@ public class SwerveModule {
         //System.out.println("Test 1: " + testEncoder.getAverageValue());
         System.out.println("offset" + (encoderOffset));
         System.out.println("Final" + (testEncoder.getAverageValue() - encoderOffset));
-        return testEncoder.getAverageValue() - encoderOffset; //we get it from this so if the encoder changes it wont effect this class. 
+        return testEncoder.getAverageValue() + encoderOffset; //we get it from this so if the encoder changes it wont effect this class. 
     }
     double getEncoderAngleRadians() //converts the encoder ticks to radians
     { 
