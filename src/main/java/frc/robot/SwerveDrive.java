@@ -19,7 +19,7 @@ public class SwerveDrive {
     SwerveModule backLeft;
     SwerveDriveKinematics driveLocation;
 
-    AHRS gyro = new AHRS(SPI.Port.kMXP);;
+    AHRS gyro = new AHRS(SPI.Port.kMXP);
 
     double powerMulti = 0.6;
 
@@ -60,11 +60,13 @@ public class SwerveDrive {
 
     void driveSet(double rotatX, double transY, double transX, double powerMulti) {
 
-       // ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
-           // transX, transY, rotatX/275, Rotation2d.fromDegrees(gyro.getAngle()));
+        ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
+            transX, transY, rotatX/275, Rotation2d.fromDegrees(gyro.getAngle()));
 
-            ChassisSpeeds speeds = new ChassisSpeeds(
-            transX, transY, rotatX/275);
+            //ChassisSpeeds speeds = new ChassisSpeeds(
+            //transX, transY, rotatX/275);
+
+        System.out.println("X: " + speeds.vxMetersPerSecond + "Y: " + speeds.vyMetersPerSecond);
 
         // Now use this in our kinematics
         SwerveModuleState[] moduleStates = driveLocation.toSwerveModuleStates(speeds);
