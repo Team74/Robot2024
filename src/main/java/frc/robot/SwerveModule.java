@@ -45,11 +45,12 @@ public class SwerveModule {
     }
 
     void setDrive(double driveSpeed, Rotation2d turnAngle, double powerMulti, Boolean print) {
-        targetAngle = (int) ((turnAngle.getRadians() + Math.PI)/ (2 * Math.PI) * testEncoder.encoderMax); //convert the radians to encoder tick
+        targetAngle = (int) ((turnAngle.getRadians() - Math.PI) * (float) testEncoder.encoderMax/ (-2.0 * Math.PI)); //convert the radians to encoder tick
+        targetAngle = (targetAngle + testEncoder.encoderMax/2) % testEncoder.encoderMax;
         setAngleMotorPower(targetAngle, print); //set the motor power 
 
         targetSpeed = MathUtil.clamp(driveSpeed,-0.95,0.95) * 5600 * 0.1; //driver speed gives -1 to 1, multiply by encoder ticks, then speed multiplier
-        drivePID.setReference(targetSpeed * powerMulti, CANSparkMax.ControlType.kVelocity); //set reference as it is velocity not position 
+        //drivePID.setReference(targetSpeed * powerMulti, CANSparkMax.ControlType.kVelocity); //set reference as it is velocity not position 
 
         //if you want to print something to console, do it here.
         if(print){
@@ -59,13 +60,15 @@ public class SwerveModule {
 
     int getEncoderAngle() {
         //System.out.println("Test 1: " + testEncoder.getAverageValue());
-        System.out.println("offset" + (encoderOffset));
-        System.out.println("Final" + (testEncoder.getAverageValue() - encoderOffset));
-        return (testEncoder.getAverageValue() + encoderOffset)% 4096; //we get it from this so if the encoder changes it wont effect this class. Mod so it rolls over
+        return ((testEncoder.getAverageValue() - encoderOffset) + testEncoder.encoderMax)% 4096; //we get it from this so if the encoder changes it wont effect this class. Mod so it rolls over
     }
     double getEncoderAngleRadians() //converts the encoder ticks to radians
     { 
-        return ((( (double) getEncoderAngle()/(testEncoder.encoderMax)) * Math.PI * 2)) -Math.PI;
+       if(getEncoderAngle() < 2028){
+        return ((double)getEncoderAngle()/((double) testEncoder.encoderMax/2.0)) * Math.PI;
+       }else{
+        return ((double)testEncoder.encoderMax - (double) getEncoderAngle())/((double) testEncoder.encoderMax/2.0) * Math.PI;
+       }
     }
 
     void PIDInit() {
@@ -74,7 +77,7 @@ public class SwerveModule {
         anglePIDController.reset();
         anglePIDController.enableContinuousInput(0, 4096); //this means that when it hits 0, it will go to 4096. It acts like a circle
         anglePIDController.setTolerance(100);
-        anglePIDController.setD(0.000005);
+        anglePIDController.setD(0.000001);
         anglePIDController.setI(0.0);
         anglePIDController.setP(0.0005);
 
@@ -121,7 +124,7 @@ public class SwerveModule {
         //dont call calc 2 times in one cycle, it does not like it 
         double calc = anglePIDController.calculate(getEncoderAngle(), targetAngle); //get the pid power
         double powerFinal = (calc); //power multi is the "gear" system, speed up / slow down
-        //System.out.println("Test 2: " + powerFinal);
+        //System.out.println(powerFinal);
         //we do this as we dont want to strain motors or batteries when we are at the setpoint. If we don't do this it will set the power to a very small number
         if (!anglePIDController.atSetpoint()) {
            turnMotorCont.set(1 * MathUtil.clamp(powerFinal, -0.2, 0.2));

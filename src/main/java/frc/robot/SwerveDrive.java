@@ -32,12 +32,23 @@ public class SwerveDrive {
     GenericEntry bl_currentAngleField = driveTab.add("Back Left Current", 0).getEntry();
     GenericEntry br_currentAngleField = driveTab.add("Back Right Current", 0).getEntry();
 
+    GenericEntry fl_currentAngleField_offset = driveTab.add("Front Left Current Offset", 0).getEntry();
+    GenericEntry fr_currentAngleField_offset = driveTab.add("Front Right Current Offset", 0).getEntry();
+    GenericEntry bl_currentAngleField_offset = driveTab.add("Back Left Current Offset", 0).getEntry();
+    GenericEntry br_currentAngleField_offset = driveTab.add("Back Right Current Offset", 0).getEntry();
+
+    GenericEntry fl_currentAngleField_target = driveTab.add("Front Left Current Target", 0).getEntry();
+    GenericEntry fr_currentAngleField_target = driveTab.add("Front Right Current Target", 0).getEntry();
+    GenericEntry bl_currentAngleField_target = driveTab.add("Back Left Current Target", 0).getEntry();
+    GenericEntry br_currentAngleField_target = driveTab.add("Back Right Current Target", 0).getEntry();
+
+
     SwerveDrive() {
         gyro.reset();
-        frontRight = new SwerveModule(11, 10, 3, 3390-2048, fr_currentAngleField);
-        frontLeft = new SwerveModule(16, 19, 0, 3923-2048, fl_currentAngleField);
+        frontRight = new SwerveModule(11, 10, 3, 1421, fr_currentAngleField);
+        frontLeft = new SwerveModule(16, 19, 0, 1846, fl_currentAngleField);
         backRight = new SwerveModule(17, 12, 2, 0, br_currentAngleField);
-        backLeft = new SwerveModule(18, 14, 1, 3866-2048, bl_currentAngleField);
+        backLeft = new SwerveModule(18, 14, 1, 1839, bl_currentAngleField);
         //positive x means moving forward aka towoard the front of the robot, positive y means moving to the left
         Translation2d frontRightLocation = new Translation2d(119, -119); //119, 103
         Translation2d frontLeftLocation = new Translation2d(119, 119);
@@ -75,12 +86,17 @@ public class SwerveDrive {
         var backLeftOptimized = SwerveModuleState.optimize(backLeftState, new Rotation2d(backLeft.getEncoderAngleRadians()));
         var backRightOptimized = SwerveModuleState.optimize(backRightState, new Rotation2d(backRight.getEncoderAngleRadians()));
 
-        //frontLeft.setDrive(frontLeftOptimized.speedMetersPerSecond, frontLeftOptimized.angle, powerMulti, false);
-        //frontRight.setDrive(frontRightOptimized.speedMetersPerSecond, frontRightOptimized.angle, powerMulti,false);
+        Rotation2d testAngle = Rotation2d.fromDegrees(0);
+
+        //frontLeft.setDrive(frontLeftOptimized.speedMetersPerSecond,frontLeftOptimized.angle, powerMulti, false);
+        frontRight.setDrive(frontRightOptimized.speedMetersPerSecond, frontRightOptimized.angle, powerMulti,false);
         //backLeft.setDrive(backLeftOptimized.speedMetersPerSecond, backLeftOptimized.angle, powerMulti,false); //negitive due to issue. TODO Fix it
-        //backRight.setDrive(backRightOptimized.speedMetersPerSecond, backRightOptimized.angle, powerMulti,true); //negitive due to issue. TODO Fix it
-    
-        fl_currentAngleField.setInteger((int) gyro.getAngle());
+        //backRight.setDrive(backRightOptimized.speedMetersPerSecond,backRightOptimized.angle , powerMulti,true); //negitive due to issue. TODO Fix it
+
+        //frontLeft.setDrive(frontLeftOptimized.speedMetersPerSecond,testAngle, powerMulti, false);
+        //frontRight.setDrive(frontRightOptimized.speedMetersPerSecond, testAngle, powerMulti,false);
+        //backLeft.setDrive(backLeftOptimized.speedMetersPerSecond, testAngle, powerMulti,false); //negitive due to issue. TODO Fix it
+        //backRight.setDrive(backRightOptimized.speedMetersPerSecond,testAngle , powerMulti,true); //negitive due to issue. TODO Fix it
 
         addDataToShuffle();
     }
@@ -88,10 +104,21 @@ public class SwerveDrive {
     //Adding the data from the swerve modules to the shuffle board
     void addDataToShuffle()
     {
-        fl_currentAngleField.setDouble(frontLeft.testEncoder.getAverageValue());
-        fr_currentAngleField.setInteger(frontRight.testEncoder.getAverageValue());
-        bl_currentAngleField.setInteger(backLeft.testEncoder.getAverageValue());
-        br_currentAngleField.setInteger(backRight.testEncoder.getAverageValue());
+        System.out.println(frontRight.getEncoderAngleRadians());
+        fl_currentAngleField.setDouble(frontLeft.getEncoderAngleRadians());
+        fr_currentAngleField.setDouble(frontRight.getEncoderAngleRadians());
+        bl_currentAngleField.setDouble(backLeft.getEncoderAngleRadians());
+        br_currentAngleField.setDouble(backRight.getEncoderAngleRadians());
+
+        fl_currentAngleField_offset.setDouble(frontLeft.getEncoderAngle());
+        fr_currentAngleField_offset.setInteger(frontRight.getEncoderAngle());
+        bl_currentAngleField_offset.setInteger(backLeft.getEncoderAngle());
+        br_currentAngleField_offset.setInteger(backRight.getEncoderAngle());
+
+        fl_currentAngleField_target.setDouble(frontLeft.targetAngle);
+        fr_currentAngleField_target.setInteger(frontRight.targetAngle);
+        bl_currentAngleField_target.setInteger(backLeft.targetAngle);
+        br_currentAngleField_target.setInteger(backRight.targetAngle);
     }
 
     void resetGyro()
