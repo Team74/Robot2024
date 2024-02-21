@@ -48,8 +48,8 @@ public class Robot extends TimedRobot {
     //intakeTop = new CANSparkMax(31, MotorType.kBrushed);
     //intakeBottom = new CANSparkMax(13, MotorType.kBrushed);
 
-    falconShooterLeftLeader = new TalonFX(16);
-    falconShooterRightFollower = new TalonFX(17);
+    falconShooterLeftLeader = new TalonFX(48);
+    falconShooterRightFollower = new TalonFX(49);
 
     // start with factory-default configs
     var currentConfigs = new MotorOutputConfigs();
@@ -90,9 +90,11 @@ public class Robot extends TimedRobot {
       System.out.println("A button pressed");
       falconShooterLeftLeader.set(0.1);
 
+    }else if(driverController.controller.getBButton()){
+      falconShooterLeftLeader.set(0.75);   
+
     }else{
       falconShooterLeftLeader.set(0);   
-
     }
   }
 
