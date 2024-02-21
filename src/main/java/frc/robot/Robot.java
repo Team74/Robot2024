@@ -4,12 +4,21 @@
 
 package frc.robot;
 
-import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
+
+import com.ctre.phoenix6.StatusCode;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.NeutralOut;
+import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
+import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -25,7 +34,7 @@ public class Robot extends TimedRobot {
 
    SwerveDrive driveTrain;
    CANSparkMax intakeTop, intakeBottom;
-   TalonFX falconTest;
+   TalonFX falconShooterLeftLeader, falconShooterRightFollower;
    DriverController driverController;
    SwerveModule testSwerveModule; //this is a test module
    Encoder testEncoder = new Encoder(5);
@@ -35,10 +44,26 @@ public class Robot extends TimedRobot {
     driveTrain = new SwerveDrive();
     //testSwerveModule = new SwerveModule(5, 14, 0);
     driverController = new DriverController(driveTrain);
-   // driveTrain.driveSet(0, 0.5,0.5, 0.5);
+    // driveTrain.driveSet(0, 0.5,0.5, 0.5);
     //intakeTop = new CANSparkMax(31, MotorType.kBrushed);
     //intakeBottom = new CANSparkMax(13, MotorType.kBrushed);
-    //falconTest = new TalonFX(16);
+
+    falconShooterLeftLeader = new TalonFX(16);
+    falconShooterRightFollower = new TalonFX(17);
+
+    // start with factory-default configs
+    var currentConfigs = new MotorOutputConfigs();
+
+    // The left motor is CCW+
+    currentConfigs.Inverted = InvertedValue.CounterClockwise_Positive;
+    falconShooterLeftLeader.getConfigurator().apply(currentConfigs);
+
+    // The right motor is CW+
+    //currentConfigs.Inverted = InvertedValue.Clockwise_Positive;
+    //falconShooterRightFollower.getConfigurator().apply(currentConfigs);
+
+    // Ensure our followers are following their respective leader
+    falconShooterRightFollower.setControl(new Follower(falconShooterLeftLeader.getDeviceID(), true));
   }
 
   @Override
@@ -63,9 +88,11 @@ public class Robot extends TimedRobot {
     if(driverController.controller.getAButton())
     {
       System.out.println("A button pressed");
-      //falconTest.set(0.1);
+      falconShooterLeftLeader.set(0.1);
+
     }else{
-      //falconTest.set(0);
+      falconShooterLeftLeader.set(0);   
+
     }
   }
 

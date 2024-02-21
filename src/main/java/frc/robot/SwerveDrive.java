@@ -62,7 +62,7 @@ public class SwerveDrive {
 
     void driveSet(double rotatX, double transY, double transX, double powerMulti) {
 
-        //ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
+       //ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
             //transX, transY, rotatX/275, Rotation2d.fromDegrees(gyro.getAngle()));
 
             ChassisSpeeds speeds = new ChassisSpeeds(
@@ -85,7 +85,7 @@ public class SwerveDrive {
         // Back right module state
         SwerveModuleState backRightState = moduleStates[3];
 
-        //var frontLeftOptimized = SwerveModuleState.optimize(frontLeftState, new Rotation2d(frontLeft.getEncoderAngleRadians()));
+          //var frontLeftOptimized = SwerveModuleState.optimize(frontLeftState, new Rotation2d(frontLeft.getEncoderAngleRadians()));
         //var frontRightOptimized = SwerveModuleState.optimize(frontRightState, new Rotation2d(frontRight.getEncoderAngleRadians()));
         //var backLeftOptimized = SwerveModuleState.optimize(backLeftState, new Rotation2d(backLeft.getEncoderAngleRadians()));
         //var backRightOptimized = SwerveModuleState.optimize(backRightState, new Rotation2d(backRight.getEncoderAngleRadians()));
@@ -116,18 +116,18 @@ public class SwerveDrive {
     //Adding the data from the swerve modules to the shuffle board
     void addDataToShuffle()
     {
-        //System.out.println(frontRight.getEncoderAngleRadians());
-        fl_currentAngleField.setDouble(testMod.getEncoderAngleRadians());
-        //fr_currentAngleField.setDouble(frontRight.getEncoderAngleRadians());
-        //bl_currentAngleField.setDouble(backLeft.getEncoderAngleRadians());
-        //br_currentAngleField.setDouble(backRight.getEncoderAngleRadians());
+      //System.out.println(frontRight.getEncoderAngleRadians());
+      fl_currentAngleField.setDouble(testMod.getEncoderAngleRadians());
+      //fr_currentAngleField.setDouble(frontRight.getEncoderAngleRadians());
+      //bl_currentAngleField.setDouble(backLeft.getEncoderAngleRadians());
+      //br_currentAngleField.setDouble(backRight.getEncoderAngleRadians());
 
 
-        //fl_currentAngleField_target.setDouble(frontLeft.targetAngle);
-        //fr_currentAngleField_target.setInteger(frontRight.targetAngle);
-        //bl_currentAngleField_target.setInteger(backLeft.targetAngle);
-        br_currentAngleField_target.setInteger(testMod.getEncoderAngle());
-
+      //fl_currentAngleField_target.setDouble(frontLeft.targetAngle);
+      //fr_currentAngleField_target.setInteger(frontRight.targetAngle);
+      //bl_currentAngleField_target.setInteger(backLeft.targetAngle);
+      br_currentAngleField_target.setInteger(testMod.getEncoderAngle());
+      
     }
 
     void resetGyro()
