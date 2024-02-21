@@ -52,21 +52,21 @@ public class SwerveDrive {
         backLeft = new SwerveModule(18, 14, 1, 1839, bl_currentAngleField);
         //testMod = new SwerveModule(5,14,0,0, bl_currentAngleField);
         //positive x means moving forward aka towoard the front of the robot, positive y means moving to the left
-        Translation2d frontRightLocation = new Translation2d(119, -119); //119, 103
-        Translation2d frontLeftLocation = new Translation2d(119, 119);
-        Translation2d backRightLocation = new Translation2d(-119, -119);
-        Translation2d backLeftLocation = new Translation2d(-119, 119);
+        Translation2d frontRightLocation = new Translation2d(-119, -119); //119, 103
+        Translation2d frontLeftLocation = new Translation2d(-119, 119);
+        Translation2d backRightLocation = new Translation2d(119, -119);
+        Translation2d backLeftLocation = new Translation2d(119, 119);
         driveLocation = new SwerveDriveKinematics(
                 frontLeftLocation, frontRightLocation, backLeftLocation, backRightLocation);
     }
 
     void driveSet(double rotatX, double transY, double transX, double powerMulti) {
 
-       //ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
-            //transX, transY, rotatX/275, Rotation2d.fromDegrees(gyro.getAngle()));
+       ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
+            transX, transY, rotatX/275, Rotation2d.fromDegrees(gyro.getAngle()));
 
-            ChassisSpeeds speeds = new ChassisSpeeds(
-            transX, transY, rotatX/275);
+            //ChassisSpeeds speeds = new ChassisSpeeds(
+            //transX, transY, rotatX/275);
 
             //System.out.println("X: " + speeds.vxMetersPerSecond + "Y: " + speeds.vyMetersPerSecond);
 

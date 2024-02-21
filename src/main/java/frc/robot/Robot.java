@@ -88,7 +88,7 @@ public class Robot extends TimedRobot {
     if(driverController.controller.getAButton())
     {
       System.out.println("A button pressed");
-      falconShooterLeftLeader.set(0.1);
+      falconShooterLeftLeader.set(0.12);
 
     }else if(driverController.controller.getBButton()){
       falconShooterLeftLeader.set(0.75);   

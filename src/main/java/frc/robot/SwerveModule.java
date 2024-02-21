@@ -49,7 +49,6 @@ public class SwerveModule {
         targetAngle = (targetAngle + testEncoder.encoderMax/2) % testEncoder.encoderMax;
         setAngleMotorPower(targetAngle, print); //set the motor power 
 
-        powerMulti = 0.2;
         targetSpeed = MathUtil.clamp(driveSpeed,-0.95,0.95) * 5600 * 0.1; //driver speed gives -1 to 1, multiply by encoder ticks, then speed multiplier
         drivePID.setReference(targetSpeed * powerMulti, CANSparkMax.ControlType.kVelocity); //set reference as it is velocity not position 
 
