@@ -64,10 +64,13 @@ public class SwerveModule {
     }
     double getEncoderAngleRadians() //converts the encoder ticks to radians
     { 
-       if(getEncoderAngle() < 2028){
+       if(getEncoderAngle() < 2048){
+        System.out.println("Value Less them 2048, " + getEncoderAngle());
         return ((double)getEncoderAngle()/((double) testEncoder.encoderMax/2.0)) * Math.PI;
        }else{
-        return ((double)testEncoder.encoderMax - (double) getEncoderAngle())/((double) testEncoder.encoderMax/2.0) * Math.PI;
+        double rad = (((double)testEncoder.encoderMax/2) - (double) getEncoderAngle())/((double) testEncoder.encoderMax/2.0) * Math.PI;
+        System.out.println("Value More them 2048, " + getEncoderAngle() + " Rad: " + rad);
+        return rad;
        }
     }
 
@@ -127,7 +130,7 @@ public class SwerveModule {
         //System.out.println(powerFinal);
         //we do this as we dont want to strain motors or batteries when we are at the setpoint. If we don't do this it will set the power to a very small number
         if (!anglePIDController.atSetpoint()) {
-           turnMotorCont.set(1 * MathUtil.clamp(powerFinal, -0.2, 0.2));
+           //turnMotorCont.set(1 * MathUtil.clamp(powerFinal, -0.2, 0.2));
         } else {
            turnMotorCont.set(0);
         }
