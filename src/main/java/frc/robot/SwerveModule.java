@@ -49,8 +49,9 @@ public class SwerveModule {
         targetAngle = (targetAngle + testEncoder.encoderMax/2) % testEncoder.encoderMax;
         setAngleMotorPower(targetAngle, print); //set the motor power 
 
+        powerMulti = 0.2;
         targetSpeed = MathUtil.clamp(driveSpeed,-0.95,0.95) * 5600 * 0.1; //driver speed gives -1 to 1, multiply by encoder ticks, then speed multiplier
-        //drivePID.setReference(targetSpeed * powerMulti, CANSparkMax.ControlType.kVelocity); //set reference as it is velocity not position 
+        drivePID.setReference(targetSpeed * powerMulti, CANSparkMax.ControlType.kVelocity); //set reference as it is velocity not position 
 
         //if you want to print something to console, do it here.
         if(print){
@@ -66,9 +67,9 @@ public class SwerveModule {
     { 
        if(getEncoderAngle() < 2048){
         System.out.println("Value Less them 2048, " + getEncoderAngle());
-        return ((double)getEncoderAngle()/((double) testEncoder.encoderMax/2.0)) * Math.PI;
+        return -((double) getEncoderAngle()/((double) testEncoder.encoderMax/2.0)) * Math.PI;
        }else{
-        double rad = (((double)testEncoder.encoderMax/2) - (double) getEncoderAngle())/((double) testEncoder.encoderMax/2.0) * Math.PI;
+        double rad = ((double) testEncoder.encoderMax - (double) getEncoderAngle())/( (double) testEncoder.encoderMax/2.0) * Math.PI;
         System.out.println("Value More them 2048, " + getEncoderAngle() + " Rad: " + rad);
         return rad;
        }
@@ -130,7 +131,7 @@ public class SwerveModule {
         //System.out.println(powerFinal);
         //we do this as we dont want to strain motors or batteries when we are at the setpoint. If we don't do this it will set the power to a very small number
         if (!anglePIDController.atSetpoint()) {
-           //turnMotorCont.set(1 * MathUtil.clamp(powerFinal, -0.2, 0.2));
+           turnMotorCont.set(1 * MathUtil.clamp(powerFinal, -0.2, 0.2));
         } else {
            turnMotorCont.set(0);
         }
