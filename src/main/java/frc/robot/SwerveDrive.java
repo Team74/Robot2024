@@ -95,9 +95,9 @@ public class SwerveDrive {
         Rotation2d testAngle = Rotation2d.fromDegrees(0);
 
         frontLeft.setDrive(frontLeftOptimized.speedMetersPerSecond,frontLeftOptimized.angle, powerMulti, false);
-        frontRight.setDrive(frontRightOptimized.speedMetersPerSecond, frontRightOptimized.angle, powerMulti,false);
+        frontRight.setDrive(-frontRightOptimized.speedMetersPerSecond, frontRightOptimized.angle, powerMulti,false);
         backLeft.setDrive(backLeftOptimized.speedMetersPerSecond, backLeftOptimized.angle, powerMulti,false); //negitive due to issue. TODO Fix it
-        backRight.setDrive(backRightOptimized.speedMetersPerSecond,backRightOptimized.angle , powerMulti,true); //negitive due to issue. TODO Fix it
+        backRight.setDrive(-backRightOptimized.speedMetersPerSecond,backRightOptimized.angle , powerMulti,true); //negitive due to issue. TODO Fix it
 
         //testMod.setDrive(backRightOptimized.speedMetersPerSecond, backRightOptimized.angle, powerMulti, false);
 

@@ -19,9 +19,9 @@ public class DriverController {
         this.drive = drive;
     }
         void run (){
-        double transX = controller.getLeftX(); //negitive as left and right were reversed. 
+        double transX = -controller.getLeftX(); //negitive as left and right were reversed. 
         double transY = controller.getLeftY();
-        double rotatX = -controller.getRightX(); //Same as above commet
+        double rotatX = controller.getRightX(); //Same as above commet
         drive.driveSet(rotatX,transY,-transX, powerMulti); //this is where the swerve drive code is called. 
 
         if(controller.getYButton()){
