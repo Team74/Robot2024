@@ -38,7 +38,7 @@ public class Robot extends TimedRobot {
    DriverController driverController;
    SwerveModule testSwerveModule; //this is a test module
    Encoder testEncoder = new Encoder(5);
-   /* Start at velocity 0, enable FOC, no feed forward, use slot 0 */
+     /* Start at velocity 0, enable FOC, no feed forward, use slot 0 */
   private final VelocityVoltage m_voltageVelocity = new VelocityVoltage(0, 0, true, 0, 0, false, false, false);
 
   @Override
@@ -47,8 +47,8 @@ public class Robot extends TimedRobot {
     //testSwerveModule = new SwerveModule(5, 14, 0);
     driverController = new DriverController(driveTrain);
     // driveTrain.driveSet(0, 0.5,0.5, 0.5);
-    //intakeTop = new CANSparkMax(31, MotorType.kBrushed);
-    //intakeBottom = new CANSparkMax(13, MotorType.kBrushed);
+    intakeTop = new CANSparkMax(20, MotorType.kBrushless);
+    intakeBottom = new CANSparkMax(32, MotorType.kBrushless);
 
     falconShooterLeftLeader = new TalonFX(48);
     falconShooterRightFollower = new TalonFX(49);
@@ -132,6 +132,16 @@ public class Robot extends TimedRobot {
     }else{
       falconShooterLeftLeader.set(0);   
     }
+
+    if(driverController.controller.getRightBumper()){
+      intakeBottom.set(0.10);
+      intakeTop.set(-0.10);
+    }else if(driverController.controller.getLeftBumper()){
+        intakeBottom.set(0);
+        intakeTop.set(0);
+      }
+    
+
   }
 
   @Override
