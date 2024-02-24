@@ -31,7 +31,7 @@ public class DriverController {
         if(controller.getLeftBumperPressed()){
             powerMulti = MathUtil.clamp(powerMulti - gearAmount, 0.2, 0.6);
         }else if(controller.getRightBumperPressed()){
-            powerMulti = MathUtil.clamp(powerMulti + gearAmount, 0.2, 0.6);
+            powerMulti = MathUtil.clamp(powerMulti + gearAmount, 0.4, 2);
         }
 
     }

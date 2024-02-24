@@ -74,22 +74,22 @@ public class Robot extends TimedRobot {
 
     if(driverController.controller.getAButton())
     {
-      shooter.setSpeed(100);
+      shooter.setSpeed(75);
 
     }else if(driverController.controller.getBButton()){
       //The velocity is in rotations per second
-      shooter.setSpeed(50);
+      shooter.setSpeed(5);
 
     }else{
-      shooter.setSpeed(0.0);
+      shooter.setPower(0.0);
     }
 
     if(driverController.controller.getRightBumper()){
-      intakeBottom.set(0.10);
-      intakeTop.set(-0.10);
+      //intakeBottom.set(0.95);
+      //intakeTop.set(0.95);
     }else if(driverController.controller.getLeftBumper()){
-      intakeBottom.set(0);
-      intakeTop.set(0);
+      //intakeBottom.set(0);
+      //intakeTop.set(0);
     }
     
 
