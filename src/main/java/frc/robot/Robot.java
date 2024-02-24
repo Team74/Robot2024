@@ -33,8 +33,8 @@ public class Robot extends TimedRobot {
    */
 
    SwerveDrive driveTrain;
+   Intake intake = new Intake(20,32);
    Shooter shooter = new Shooter(48, 49);
-   CANSparkMax intakeTop, intakeBottom;
    TalonFX falconShooterLeftLeader, falconShooterRightFollower;
    DriverController driverController;
    SwerveModule testSwerveModule; //this is a test module
@@ -47,9 +47,7 @@ public class Robot extends TimedRobot {
     //testSwerveModule = new SwerveModule(5, 14, 0);
     driverController = new DriverController(driveTrain);
     // driveTrain.driveSet(0, 0.5,0.5, 0.5);
-    intakeTop = new CANSparkMax(20, MotorType.kBrushless);
-    intakeBottom = new CANSparkMax(32, MotorType.kBrushless);
-
+    
     
   }
 
@@ -84,12 +82,10 @@ public class Robot extends TimedRobot {
       shooter.setPower(0.0);
     }
 
-    if(driverController.controller.getRightBumper()){
-      //intakeBottom.set(0.95);
-      //intakeTop.set(0.95);
-    }else if(driverController.controller.getLeftBumper()){
-      //intakeBottom.set(0);
-      //intakeTop.set(0);
+    if(driverController.controller.getXButton()){
+      intake.setPower(0.9);
+    }else if(driverController.controller.getYButton()){
+      intake.setPower(0);
     }
     
 
