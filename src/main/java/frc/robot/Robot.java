@@ -8,8 +8,14 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+
+import java.sql.Time;
 
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
@@ -41,7 +47,21 @@ public class Robot extends TimedRobot {
    SwerveModule testSwerveModule; //this is a test module
    Encoder testEncoder = new Encoder(5);
    XboxController opController = new XboxController(1);
-     /* Start at velocity 0, enable FOC, no feed forward, use slot 0 */
+
+   SendableChooser<String> autonChooser = new SendableChooser<>();
+   String autonSelected;
+   Timer timer = new Timer();
+   Auton auton;
+   Double time;
+
+   double autoGyroOffset = 0.0;
+
+    //Autons
+    String auDefaultAuton = "Default_Auton";
+    String auAmp_2P = "Amp_2_Piece";
+    String auShootMove = "Shoot_Move";
+
+    /* Start at velocity 0, enable FOC, no feed forward, use slot 0 */
 
   @Override
   public void robotInit() {
@@ -50,6 +70,12 @@ public class Robot extends TimedRobot {
     driverController = new DriverController(driveTrain);
     // driveTrain.driveSet(0, 0.5,0.5, 0.5);
     CameraServer.startAutomaticCapture(0);
+
+    autonChooser.setDefaultOption("Default Auto", auDefaultAuton);
+    autonChooser.addOption("Amp Side 2 Piece", auAmp_2P);
+    autonChooser.addOption("Shoot and Move", auShootMove);
+
+    Shuffleboard.getTab("Drive3").add(autonChooser);
     
   }
 
@@ -57,10 +83,34 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {}
 
   @Override
-  public void autonomousInit() {}
+  public void autonomousInit() {
+    driveTrain.resetGyro(); //TODO make the gyro account for the angle of the Speaker, Maybe add a gyro offset in the switch state?
+    timer.reset();
+    timer.start();
+    autonSelected = autonChooser.getSelected();
+
+    switch(autonSelected){
+      case auAmp_2P:
+      auton = new Auton_AmpSide_2P(driveTrain, shooter, intake, false);
+      autoGyroOffset = -30.0;
+      break;
+
+      case auShootMove:
+      auton = new Auton_Move(driveTrain, shooter, intake, false);
+      break;
+    default:
+      System.out.println("Auton Failed, Defualt Auto");
+    }
+    
+  }
 
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    time = timer.get();
+    if(auton != null){
+      auton.run(time);
+    }
+  }
 
   @Override
   public void teleopInit() {}
@@ -74,7 +124,7 @@ public class Robot extends TimedRobot {
 
     if(opController.getAButton())
     {
-      shooter.setSpeed(75);
+      shooter.setSpeed(80);
 
     }else if(driverController.controller.getBButton()){
       //The velocity is in rotations per second

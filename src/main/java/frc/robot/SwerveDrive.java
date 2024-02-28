@@ -132,6 +132,13 @@ public class SwerveDrive {
 
     void resetGyro()
     {
+        gyro.zeroYaw(0);
         gyro.reset();
+    }
+
+    void resetGyroWithOffset(double offSet)
+    {
+        gyro.reset();
+        gyro.zeroYaw(offSet);
     }
 }
