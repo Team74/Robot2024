@@ -7,6 +7,7 @@ package frc.robot;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 
@@ -39,6 +40,7 @@ public class Robot extends TimedRobot {
    DriverController driverController;
    SwerveModule testSwerveModule; //this is a test module
    Encoder testEncoder = new Encoder(5);
+   XboxController opController = new XboxController(1);
      /* Start at velocity 0, enable FOC, no feed forward, use slot 0 */
 
   @Override
@@ -47,7 +49,7 @@ public class Robot extends TimedRobot {
     //testSwerveModule = new SwerveModule(5, 14, 0);
     driverController = new DriverController(driveTrain);
     // driveTrain.driveSet(0, 0.5,0.5, 0.5);
-    
+    CameraServer.startAutomaticCapture(0);
     
   }
 
@@ -70,22 +72,24 @@ public class Robot extends TimedRobot {
     //testSwerveModule.setModulePower(1, 0);
     //System.out.println(testEncoder.getDoubleValue());
 
-    if(driverController.controller.getAButton())
+    if(opController.getAButton())
     {
       shooter.setSpeed(75);
 
     }else if(driverController.controller.getBButton()){
       //The velocity is in rotations per second
-      shooter.setSpeed(5);
+      //shooter.setSpeed(5);
 
     }else{
       shooter.setPower(0.0);
     }
 
-    if(driverController.controller.getXButton()){
+    if(opController.getLeftBumperPressed()){
       intake.setPower(0.9);
-    }else if(driverController.controller.getYButton()){
+    }else if(opController.getRightBumperPressed()){
       intake.setPower(0);
+    }else if (opController.getYButton()){
+      intake.setPower(-0.2);
     }
     
 

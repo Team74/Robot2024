@@ -63,7 +63,7 @@ public class SwerveDrive {
     void driveSet(double rotatX, double transY, double transX, double powerMulti) {
 
        ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
-            transX, transY, rotatX/275, Rotation2d.fromDegrees(gyro.getAngle()));
+            transX, transY, rotatX/275, Rotation2d.fromDegrees(gyro.getAngle()+90));
 
             //ChassisSpeeds speeds = new ChassisSpeeds(
             //transX, transY, rotatX/275);
