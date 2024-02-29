@@ -127,7 +127,7 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void teleopInit() {}
+  public void teleopInit() { }
 
   @Override
   public void teleopPeriodic() {
@@ -139,7 +139,7 @@ public class Robot extends TimedRobot {
     //Drive Controls
     if(opController.getAButton())
     {
-      shooter.setSpeed(80);
+      shooter.setTargetRPS(80);
 
     }else if(driverController.controller.getBButton()){
       //The velocity is in rotations per second

@@ -22,6 +22,18 @@ public class DriverController {
         double transX = -controller.getLeftX(); //negative as left and right were reversed. 
         double transY = controller.getLeftY();
         double rotatX = controller.getRightX(); 
+
+        //TODO make values close to 1 be 1, thus holding forward on the joystick will go perfectly strait. 
+        if(transX > 0.95){
+
+        }else if(transX < -0.95){
+
+        }else if(transY > 0.95){
+
+        }else if(transY < -0.95){
+
+        }
+
         drive.driveSet(rotatX,transY,-transX, powerMulti); //this is where the swerve drive code is called. 
 
         if(controller.getYButton()){

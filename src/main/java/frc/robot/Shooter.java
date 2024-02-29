@@ -67,7 +67,7 @@ public class Shooter {
     falconShooterRightFollower.setControl(new Follower(falconShooterLeftLeader.getDeviceID(), true));
     }
 
-    void setSpeed(double targetRPS)
+    void setTargetRPS(double targetRPS)
     {
         falconShooterLeftLeader.setControl(m_voltageVelocity.withVelocity(targetRPS));
     }
