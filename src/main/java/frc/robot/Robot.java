@@ -8,11 +8,13 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 import java.sql.Time;
@@ -40,6 +42,7 @@ public class Robot extends TimedRobot {
    */
 
    SwerveDrive driveTrain;
+   Climber climber = new Climber(0, 0);
    Intake intake = new Intake(20,32);
    Shooter shooter = new Shooter(48, 49);
    TalonFX falconShooterLeftLeader, falconShooterRightFollower;
@@ -60,6 +63,9 @@ public class Robot extends TimedRobot {
     String auDefaultAuton = "Default_Auton";
     String auAmp_2P = "Amp_2_Piece";
     String auShootMove = "Shoot_Move";
+
+    ShuffleboardTab driveTab = Shuffleboard.getTab("Drive3");
+    GenericEntry intakePieceField = driveTab.add("Have Piece", false).getEntry();
 
     /* Start at velocity 0, enable FOC, no feed forward, use slot 0 */
 
@@ -84,7 +90,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    driveTrain.resetGyro(); //TODO make the gyro account for the angle of the Speaker, Maybe add a gyro offset in the switch state?
     timer.reset();
     timer.start();
     autonSelected = autonChooser.getSelected();
@@ -92,14 +97,23 @@ public class Robot extends TimedRobot {
     switch(autonSelected){
       case auAmp_2P:
       auton = new Auton_AmpSide_2P(driveTrain, shooter, intake, false);
-      autoGyroOffset = -30.0;
+      autoGyroOffset = -54.6; 
       break;
 
       case auShootMove:
       auton = new Auton_Move(driveTrain, shooter, intake, false);
+      autoGyroOffset = 0.0;
       break;
     default:
       System.out.println("Auton Failed, Defualt Auto");
+    }
+
+    //This is so we can start against the speaker and still have 0 be away from driver station. Don't need a offset for center spot. 
+    //TODO check if the gyro is good after auton
+    if(autoGyroOffset != 0.0){
+      driveTrain.resetGyroWithOffset(autoGyroOffset);
+    }else{
+      driveTrain.resetGyro();
     }
     
   }
@@ -122,6 +136,7 @@ public class Robot extends TimedRobot {
     //testSwerveModule.setModulePower(1, 0);
     //System.out.println(testEncoder.getDoubleValue());
 
+    //Drive Controls
     if(opController.getAButton())
     {
       shooter.setSpeed(80);
@@ -134,15 +149,32 @@ public class Robot extends TimedRobot {
       shooter.setPower(0.0);
     }
 
-    if(opController.getLeftBumperPressed()){
+    //Intake Controls
+    if(opController.getLeftTriggerAxis() > 0.3){ //Intake
       intake.setPower(0.9);
-    }else if(opController.getRightBumperPressed()){
-      intake.setPower(0);
-    }else if (opController.getYButton()){
+    }else if(opController.getRightTriggerAxis() > 0.3){ //Outtake
       intake.setPower(-0.2);
+    }else if(opController.getRightBumper()){ //Intake until piece
+      intake.setPowerUntilPiece(0.9);
+    }else{ //Stop Motor if no controls
+      intake.setPower(0.0);
     }
     
+    //Climber Controls
+    if(opController.getPOV() == 180){ //Climb Up
+      climber.setPowerTogether(-0.5);
+    }else if(opController.getPOV() == 0){ //Climb Down
+      climber.setPowerTogether(0.5);
+    }else if(opController.getPOV() == 90){ //Climb Down Left
+      climber.setLeftPower(-0.5);
+    }else if(opController.getPOV()== 270){ //Climb Down Right
+      climber.setRightPower(-0.5);
+    }else{ //Turn off power
+      climber.setPowerTogether(0);
+    }
 
+    //Puts a bool to the shuffleboard saying if we have a piece.
+    intakePieceField.setBoolean(intake.hasPiece());
   }
 
   @Override

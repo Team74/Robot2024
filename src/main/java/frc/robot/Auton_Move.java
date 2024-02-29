@@ -7,9 +7,10 @@ public class Auton_Move extends Auton {
         //TODO Auto-generated constructor stub
     }
 
-    //Shoot pre load then move away. Good for when teammates want to do things there is a fear of a collision
+    //Shoot pre load then move away. Good for when teammates want to do things and there is a fear of a collision
     public void run(double time){
         if(time < 0.3){ //Start Shooter, wait for rev up
+            driveBase.driveSet(0, 0, 0, 0);
             shooter.setSpeed(80);
         }else if (time < 0.7){ //Feed piece into Shooter
             shooter.setSpeed(80);
@@ -17,7 +18,9 @@ public class Auton_Move extends Auton {
         }else if (time < 1){ //Turn off Shooter and Intake, move away
             shooter.setPower(0);
             intake.setPower(0);
-            driveBase.driveSet(1, -0.3, 0.5, 1.5);
+            driveBase.driveSet(0, 0, 0, 0);
+        }else if(time < 13){
+            driveBase.driveSet(0, 0, 1, 1);
         }else{ //Auton Done, stop motors
             shooter.setPower(0);
             intake.setPower(0);

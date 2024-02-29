@@ -7,6 +7,7 @@ public class Auton_AmpSide_2P extends Auton {
         //TODO Auto-generated constructor stub
     }
 
+    //TODO make it work on the blue side 
     //2 Piece Auto from Amp side position. Start with robot hugging the Speaker
     public void run(double time){
         if(time < 0.3){ //Turn on shooter, wait for rev up
@@ -21,7 +22,7 @@ public class Auton_AmpSide_2P extends Auton {
         }else if (time < 1.3){ // Move to next piece
             driveBase.driveSet(0, 0, 1, 1.5);
         }else if (time < 1.7){ // Stop for a sec, don't want to make robot pop a wheelie or make it rotate a little, ect
-            //stop for a sec
+            driveBase.driveSet(0, 0, 0, 0);
         }else if(time < 2.3){ // Start going back to Speaker
             driveBase.driveSet(0, 0, -1, 1.5);
         }else if (time < 2.8){ //Move back to Speaker, new Angle of direction
