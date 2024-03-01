@@ -65,11 +65,11 @@ public class SwerveModule {
     double getEncoderAngleRadians() //converts the encoder ticks to radians
     { 
        if(getEncoderAngle() < 2048){
-        System.out.println("Value Less them 2048, " + getEncoderAngle());
+        //System.out.println("Value Less them 2048, " + getEncoderAngle());
         return -((double) getEncoderAngle()/((double) testEncoder.encoderMax/2.0)) * Math.PI;
        }else{
         double rad = ((double) testEncoder.encoderMax - (double) getEncoderAngle())/( (double) testEncoder.encoderMax/2.0) * Math.PI;
-        System.out.println("Value More them 2048, " + getEncoderAngle() + " Rad: " + rad);
+        //System.out.println("Value More them 2048, " + getEncoderAngle() + " Rad: " + rad);
         return rad;
        }
     }
