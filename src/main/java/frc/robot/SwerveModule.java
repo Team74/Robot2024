@@ -79,7 +79,7 @@ public class SwerveModule {
         //the angle PID is on the rio, so we have to set everything manually
         anglePIDController.reset();
         anglePIDController.enableContinuousInput(0, 4096); //this means that when it hits 0, it will go to 4096. It acts like a circle
-        anglePIDController.setTolerance(100);
+        anglePIDController.setTolerance(40);
         anglePIDController.setD(0.000001);
         anglePIDController.setI(0.0);
         anglePIDController.setP(0.0005);

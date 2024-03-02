@@ -61,10 +61,10 @@ public class Robot extends TimedRobot {
    double autoGyroOffset = 0.0;
 
     //Autons
-    String auDefaultAuton = "Default_Auton";
-    String auAmp_2P = "Amp_2_Piece";
-    String auAmp_4P = "Amp_4_Piece";
-    String auShootMove = "Shoot_Move";
+    private static final String auDefaultAuton = "Default_Auton";
+    private static final String auAmp_2P = "Amp_2_Piece";
+    private static final String auAmp_4P = "Amp_4_Piece";
+    private static final String auShootMove = "Shoot_Move";
 
     ShuffleboardTab driveTab = Shuffleboard.getTab("Drive3");
     GenericEntry intakePieceField = driveTab.add("Have Piece", false).getEntry();
@@ -109,7 +109,7 @@ public class Robot extends TimedRobot {
       break;
 
       case auShootMove:
-      auton = new Auton_Move(driveTrain, shooter, intake, false);
+      auton = new Auton_Center_2P(driveTrain, shooter, intake, false);
       autoGyroOffset = 0.0;
       break;
     default:
@@ -140,6 +140,7 @@ auton = new Auton_Move(driveTrain, shooter, intake, false);
 
   @Override
   public void teleopPeriodic() {
+    //driveTrain.driveSet(0, -1, 0, 0);
     //frontRight.setDrive(0.25);
     driverController.run();
     //testSwerveModule.setModulePower(1, 0);
@@ -186,7 +187,7 @@ auton = new Auton_Move(driveTrain, shooter, intake, false);
 
     //Puts a bool to the shuffleboard saying if we have a piece.
     intakePieceField.setBoolean(intake.hasPiece());
-    gyroAngleField.setInteger(driveTrain.gyro.getAngle());
+    gyroAngleField.setDouble(driveTrain.gyro.getAngle());
 
   }
 

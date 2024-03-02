@@ -47,7 +47,7 @@ public class SwerveDrive {
     SwerveDrive() {
         gyro.reset();
         frontRight = new SwerveModule(11, 10, 3, 1421, fr_currentAngleField);
-        frontLeft = new SwerveModule(16, 19, 0, 1846, fl_currentAngleField);
+        frontLeft = new SwerveModule(16, 19, 0, 1906, fl_currentAngleField);
         backRight = new SwerveModule(17, 12, 2, 0, br_currentAngleField);
         backLeft = new SwerveModule(18, 14, 1, 1839, bl_currentAngleField);
         //testMod = new SwerveModule(5,14,0,0, bl_currentAngleField);
@@ -135,7 +135,7 @@ public class SwerveDrive {
         gyro.reset();
     }
 
-    void resetGyroWithOffset(double offSet)
+    void resetGyroWithOffset(double offSet) //TODO make this do something
     {
         gyro.reset();
     }
