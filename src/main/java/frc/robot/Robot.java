@@ -10,14 +10,13 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.util.sendable.Sendable;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.sql.Time;
 
@@ -62,12 +61,14 @@ public class Robot extends TimedRobot {
    double autoGyroOffset = 0.0;
 
     //Autons
-    static final String auDefaultAuton = "Default_Auton";
-    static final String auAmp_2P = "Amp_2_Piece";
-    static final String auShootMove = "Shoot_Move";
+    String auDefaultAuton = "Default_Auton";
+    String auAmp_2P = "Amp_2_Piece";
+    String auAmp_4P = "Amp_4_Piece";
+    String auShootMove = "Shoot_Move";
 
     ShuffleboardTab driveTab = Shuffleboard.getTab("Drive3");
     GenericEntry intakePieceField = driveTab.add("Have Piece", false).getEntry();
+    GenericEntry gyroAngleField = driveTab.add("Gyro Angle", false).getEntry();
 
     /* Start at velocity 0, enable FOC, no feed forward, use slot 0 */
 
@@ -102,13 +103,18 @@ public class Robot extends TimedRobot {
       autoGyroOffset = -54.6; 
       break;
 
+      case auAmp_4P:
+      auton = new Auton_AmpSide_4P(driveTrain, shooter, intake, false);
+      autoGyroOffset = -54.6; 
+      break;
+
       case auShootMove:
       auton = new Auton_Move(driveTrain, shooter, intake, false);
       autoGyroOffset = 0.0;
       break;
     default:
       System.out.println("Auton Failed, Defualt Auto");
-      auton = new Auton_Move(driveTrain, shooter, intake, false);
+auton = new Auton_Move(driveTrain, shooter, intake, false);
     }
 
     //This is so we can start against the speaker and still have 0 be away from driver station. Don't need a offset for center spot. 
@@ -163,7 +169,7 @@ public class Robot extends TimedRobot {
       intake.setPower(0.0);
     }
     
-    /* 
+/* 
     //Climber Controls
     if(opController.getPOV() == 180){ //Climb Up
       climber.setPowerTogether(-0.5);
@@ -176,18 +182,11 @@ public class Robot extends TimedRobot {
     }else{ //Turn off power
       climber.setPowerTogether(0);
     }
-    */
+*/
 
     //Puts a bool to the shuffleboard saying if we have a piece.
     intakePieceField.setBoolean(intake.hasPiece());
-
-    if(intake.limitSensor.get() == true){
-      System.out.println("Yes");
-    }else if(intake.limitSensor.get() == false){
-      System.out.println("No");
-    }else{
-      System.out.println("no signal");
-    }
+    gyroAngleField.setInteger(driveTrain.gyro.getAngle());
 
   }
 
