@@ -68,7 +68,7 @@ public class Robot extends TimedRobot {
 
     ShuffleboardTab driveTab = Shuffleboard.getTab("Drive3");
     GenericEntry intakePieceField = driveTab.add("Have Piece", false).getEntry();
-    GenericEntry gyroAngleField = driveTab.add("Gyro Angle", false).getEntry();
+    GenericEntry gyroAngleField = driveTab.add("Gyro Angle", 0.0).getEntry();
 
     /* Start at velocity 0, enable FOC, no feed forward, use slot 0 */
 
@@ -93,6 +93,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    driveTrain.resetGyro();
     timer.reset();
     timer.start();
     autonSelected = autonChooser.getSelected();
@@ -114,7 +115,7 @@ public class Robot extends TimedRobot {
       break;
     default:
       System.out.println("Auton Failed, Defualt Auto");
-auton = new Auton_Move(driveTrain, shooter, intake, false);
+auton = new Auton_Center_2P(driveTrain, shooter, intake, false);
     }
 
     //This is so we can start against the speaker and still have 0 be away from driver station. Don't need a offset for center spot. 
@@ -140,7 +141,7 @@ auton = new Auton_Move(driveTrain, shooter, intake, false);
 
   @Override
   public void teleopPeriodic() {
-    //driveTrain.driveSet(0, -1, 0, 0);
+    //driveTrain.driveSet(0, -1, 0, 0.3);
     //frontRight.setDrive(0.25);
     driverController.run();
     //testSwerveModule.setModulePower(1, 0);

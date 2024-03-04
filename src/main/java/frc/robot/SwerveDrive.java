@@ -2,7 +2,7 @@ package frc.robot;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
-
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -46,8 +46,8 @@ public class SwerveDrive {
 
     SwerveDrive() {
         gyro.reset();
-        frontRight = new SwerveModule(11, 10, 3, 1421, fr_currentAngleField);
-        frontLeft = new SwerveModule(16, 19, 0, 1906, fl_currentAngleField);
+        frontRight = new SwerveModule(11, 10, 3, 1351, fr_currentAngleField);//-
+        frontLeft = new SwerveModule(16, 19, 0, 1956, fl_currentAngleField);//+
         backRight = new SwerveModule(17, 12, 2, 0, br_currentAngleField);
         backLeft = new SwerveModule(18, 14, 1, 1839, bl_currentAngleField);
         //testMod = new SwerveModule(5,14,0,0, bl_currentAngleField);
@@ -60,10 +60,23 @@ public class SwerveDrive {
                 frontLeftLocation, frontRightLocation, backLeftLocation, backRightLocation);
     }
 
+    double lastGyroAngle = 0.0;
     void driveSet(double rotatX, double transY, double transX, double powerMulti) {
 
+        if((1.5 - lastGyroAngle > gyro.getAngle() || gyro.getAngle() > 1.5 + lastGyroAngle) && rotatX == 0)
+        {
+            rotatX = (gyro.getAngle() - lastGyroAngle) * -0.1;
+        }else{
+            System.out.println("No rotate");
+        }
+        if(Math.abs(rotatX) > 0.1){
+            lastGyroAngle = gyro.getAngle();
+            System.out.println("Reset");
+        }
+        System.out.println("Rotate x " + rotatX + "Last Gyro Angle " + lastGyroAngle + " Current Gyro " + gyro.getAngle());
+
        ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
-            transX, transY, rotatX/275, Rotation2d.fromDegrees(gyro.getAngle()+90));
+            transX, transY, rotatX/275, Rotation2d.fromDegrees(gyro.getAngle()+90.0));
 
             //ChassisSpeeds speeds = new ChassisSpeeds(
             //transX, transY, rotatX/275);
@@ -111,6 +124,10 @@ public class SwerveDrive {
         //fr_currentAngleField_offset.setDouble(frontRightOptimized.angle.getRadians());
         //bl_currentAngleField_offset.setDouble(backLeftOptimized.angle.getRadians());
         br_currentAngleField_offset.setDouble(backRightOptimized.angle.getRadians());
+        //System.out.println("FR: " + frontRight.powerFinal + " FL: " + frontLeft.powerFinal 
+          //  + " BR: " + backRight.powerFinal + " BL: " + backLeft.powerFinal);
+
+        
     }
 
     //Adding the data from the swerve modules to the shuffle board
@@ -133,6 +150,7 @@ public class SwerveDrive {
     void resetGyro()
     {
         gyro.reset();
+        lastGyroAngle = 0.0;
     }
 
     void resetGyroWithOffset(double offSet) //TODO make this do something

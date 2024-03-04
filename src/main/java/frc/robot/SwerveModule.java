@@ -79,7 +79,7 @@ public class SwerveModule {
         //the angle PID is on the rio, so we have to set everything manually
         anglePIDController.reset();
         anglePIDController.enableContinuousInput(0, 4096); //this means that when it hits 0, it will go to 4096. It acts like a circle
-        anglePIDController.setTolerance(40);
+        anglePIDController.setTolerance(10);
         anglePIDController.setD(0.000001);
         anglePIDController.setI(0.0);
         anglePIDController.setP(0.0005);
@@ -102,6 +102,8 @@ public class SwerveModule {
         drivePID.setIZone(kIz);
         drivePID.setFF(kFF);
         drivePID.setOutputRange(kMinOutput, kMaxOutput);
+
+        driveMotorCont.burnFlash();
     }
 
     //These are called from the Swerve Drive Class
@@ -122,12 +124,13 @@ public class SwerveModule {
         drivePIDController.setTolerance(driveTol);
     }
 
+    double powerFinal;
     void setAngleMotorPower(int targetAngle, Boolean print){
 
         //dont call calc 2 times in one cycle, it does not like it 
         double calc = anglePIDController.calculate(getEncoderAngle(), targetAngle); //get the pid power
-        double powerFinal = (calc); //power multi is the "gear" system, speed up / slow down
-        //System.out.println(powerFinal);
+        powerFinal = (calc); //power multi is the "gear" system, speed up / slow down
+       // System.out.println(powerFinal);
         //we do this as we dont want to strain motors or batteries when we are at the setpoint. If we don't do this it will set the power to a very small number
         if (!anglePIDController.atSetpoint()) {
            turnMotorCont.set(1 * MathUtil.clamp(powerFinal, -0.2, 0.2));
