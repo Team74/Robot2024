@@ -63,18 +63,6 @@ public class SwerveDrive {
     double lastGyroAngle = 0.0;
     void driveSet(double rotatX, double transY, double transX, double powerMulti) {
 
-        if((1.5 - lastGyroAngle > gyro.getAngle() || gyro.getAngle() > 1.5 + lastGyroAngle) && rotatX == 0)
-        {
-            rotatX = (gyro.getAngle() - lastGyroAngle) * -0.1;
-        }else{
-            System.out.println("No rotate");
-        }
-        if(Math.abs(rotatX) > 0.1){
-            lastGyroAngle = gyro.getAngle();
-            System.out.println("Reset");
-        }
-        System.out.println("Rotate x " + rotatX + "Last Gyro Angle " + lastGyroAngle + " Current Gyro " + gyro.getAngle());
-
        ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
             transX, transY, rotatX/275, Rotation2d.fromDegrees(gyro.getAngle()+90.0));
 
@@ -157,4 +145,74 @@ public class SwerveDrive {
     {
         gyro.reset();
     }
+
+    void driveSetWithGyro(double rotatX, double transY, double transX, double powerMulti) {
+
+        if((1.5 - lastGyroAngle > gyro.getAngle() || gyro.getAngle() > 1.5 + lastGyroAngle) && rotatX == 0)
+        {
+            rotatX = (gyro.getAngle() - lastGyroAngle) * -0.1;
+        }else{
+            System.out.println("No rotate");
+        }
+        if(Math.abs(rotatX) > 0.1){
+            lastGyroAngle = gyro.getAngle();
+            System.out.println("Reset");
+        }
+        System.out.println("Rotate x " + rotatX + "Last Gyro Angle " + lastGyroAngle + " Current Gyro " + gyro.getAngle());
+
+       ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
+            transX, transY, rotatX/275, Rotation2d.fromDegrees(gyro.getAngle()+90.0));
+
+            //ChassisSpeeds speeds = new ChassisSpeeds(
+            //transX, transY, rotatX/275);
+
+            //System.out.println("X: " + speeds.vxMetersPerSecond + "Y: " + speeds.vyMetersPerSecond);
+
+        // Now use this in our kinematics
+        SwerveModuleState[] moduleStates = driveLocation.toSwerveModuleStates(speeds);
+
+        // Front left module state
+        SwerveModuleState frontLeftState = moduleStates[0];
+
+        // Front right module state
+        SwerveModuleState frontRightState = moduleStates[1];
+
+        // Back left module state
+        SwerveModuleState backLeftState = moduleStates[2];
+
+        // Back right module state
+        SwerveModuleState backRightState = moduleStates[3];
+
+        var frontLeftOptimized = SwerveModuleState.optimize(frontLeftState, new Rotation2d(frontLeft.getEncoderAngleRadians()));
+        var frontRightOptimized = SwerveModuleState.optimize(frontRightState, new Rotation2d(frontRight.getEncoderAngleRadians()));
+        var backLeftOptimized = SwerveModuleState.optimize(backLeftState, new Rotation2d(backLeft.getEncoderAngleRadians()));
+        var backRightOptimized = SwerveModuleState.optimize(backRightState, new Rotation2d(backRight.getEncoderAngleRadians()));
+
+        //var backRightOptimized = SwerveModuleState.optimize(backRightState, new Rotation2d(testMod.getEncoderAngleRadians()));
+
+        Rotation2d testAngle = Rotation2d.fromDegrees(0);
+
+        frontLeft.setDrive(frontLeftOptimized.speedMetersPerSecond,frontLeftOptimized.angle, powerMulti, false);
+        frontRight.setDrive(-frontRightOptimized.speedMetersPerSecond, frontRightOptimized.angle, powerMulti,false);
+        backLeft.setDrive(backLeftOptimized.speedMetersPerSecond, backLeftOptimized.angle, powerMulti,false); //negitive due to issue. TODO Fix it
+        backRight.setDrive(-backRightOptimized.speedMetersPerSecond,backRightOptimized.angle , powerMulti,true); //negitive due to issue. TODO Fix it
+
+        //testMod.setDrive(backRightOptimized.speedMetersPerSecond, backRightOptimized.angle, powerMulti, false);
+
+        //frontLeft.setDrive(frontLeftOptimized.speedMetersPerSecond,testAngle, powerMulti, false);
+        //frontRight.setDrive(frontRightOptimized.speedMetersPerSecond, testAngle, powerMulti,false);
+        //backLeft.setDrive(backLeftOptimized.speedMetersPerSecond, testAngle, powerMulti,false); //negitive due to issue. TODO Fix it
+        //backRight.setDrive(backRightOptimized.speedMetersPerSecond,testAngle , powerMulti,true); //negitive due to issue. TODO Fix it
+
+        addDataToShuffle();
+        // fl_currentAngleField_offset.setDouble(frontLeftOptimized.angle.getRadians());
+        //fr_currentAngleField_offset.setDouble(frontRightOptimized.angle.getRadians());
+        //bl_currentAngleField_offset.setDouble(backLeftOptimized.angle.getRadians());
+        br_currentAngleField_offset.setDouble(backRightOptimized.angle.getRadians());
+        //System.out.println("FR: " + frontRight.powerFinal + " FL: " + frontLeft.powerFinal 
+          //  + " BR: " + backRight.powerFinal + " BL: " + backLeft.powerFinal);
+
+        
+    }
+
 }

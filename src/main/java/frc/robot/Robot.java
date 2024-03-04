@@ -65,6 +65,7 @@ public class Robot extends TimedRobot {
     private static final String auAmp_2P = "Amp_2_Piece";
     private static final String auAmp_4P = "Amp_4_Piece";
     private static final String auShootMove = "Shoot_Move";
+    private static final String auCenter_2P = "Center_2_Piece";
 
     ShuffleboardTab driveTab = Shuffleboard.getTab("Drive3");
     GenericEntry intakePieceField = driveTab.add("Have Piece", false).getEntry();
@@ -83,6 +84,7 @@ public class Robot extends TimedRobot {
     autonChooser.setDefaultOption("Default Auto", auDefaultAuton);
     autonChooser.addOption("Amp Side 2 Piece", auAmp_2P);
     autonChooser.addOption("Shoot and Move", auShootMove);
+    autonChooser.addOption("Center 2 Piece", auCenter_2P);
 
     Shuffleboard.getTab("Drive3").add(autonChooser);
     
@@ -109,8 +111,12 @@ public class Robot extends TimedRobot {
       autoGyroOffset = -54.6; 
       break;
 
-      case auShootMove:
+      case auCenter_2P:
       auton = new Auton_Center_2P(driveTrain, shooter, intake, false);
+      autoGyroOffset = 0.0;
+
+      case auShootMove:
+      auton = new Auton_Move(driveTrain, shooter, intake, false);
       autoGyroOffset = 0.0;
       break;
     default:
