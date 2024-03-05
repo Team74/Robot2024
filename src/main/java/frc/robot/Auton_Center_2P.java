@@ -7,8 +7,8 @@ public class Auton_Center_2P extends Auton {
         //TODO Auto-generated constructor stub
     }
     //-y = forward
-
-    //Test Code, ignore for now
+    
+//Test Code, ignore for now
     /*double timeToRun = 0.0;
     if(time < timeToRun)
         Boolean firstTime = true;
@@ -18,7 +18,7 @@ public class Auton_Center_2P extends Auton {
             }*/
     
     public void run(double time){
-        if(time < 1){ //Turn on shooter, wait for rev up 
+        if(time < 1){ //Turn on shooter, wait for rev up
             driveBase.driveSetWithGyro(0, -1, 0, 0);
             shooter.setTargetRPS(80);
         }else if (time < 2.2){ //Feed preload into shooter, wait for piece to leave
@@ -31,7 +31,7 @@ public class Auton_Center_2P extends Auton {
         }else if (time < 4){ //Stop to pick up piece
             intake.setPowerUntilPiece(0.8);
             driveBase.driveSetWithGyro(0, 0, 0, 0);
-        }else if(time < 5.3){ //drive back
+        }else if(time < 5.3){ //drive back 
             intake.setPowerUntilPiece(0.8);
             driveBase.driveSetWithGyro(0, 1, 0, 0.7);
         }else if(time < 6){

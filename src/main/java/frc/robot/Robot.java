@@ -43,7 +43,7 @@ public class Robot extends TimedRobot {
    */
 
    SwerveDrive driveTrain;
-   //Climber climber = new Climber(33, 37);
+   Climber climber = new Climber(4, 33);
    Intake intake = new Intake(20,32);
    Shooter shooter = new Shooter(48, 49);
    TalonFX falconShooterLeftLeader, falconShooterRightFollower;
@@ -121,7 +121,7 @@ public class Robot extends TimedRobot {
       break;
     default:
       System.out.println("Auton Failed, Defualt Auto");
-auton = new Auton_Center_2P(driveTrain, shooter, intake, false);
+      auton = new Auton_Center_2P(driveTrain, shooter, intake, false);
     }
 
     //This is so we can start against the speaker and still have 0 be away from driver station. Don't need a offset for center spot. 
@@ -160,7 +160,7 @@ auton = new Auton_Center_2P(driveTrain, shooter, intake, false);
 
     }else if(driverController.controller.getBButton()){
       //The velocity is in rotations per second
-      shooter.setTargetRPS(3.5);
+      shooter.setTargetRPS(9.5); //3.5
 
     }else{
       shooter.setPower(0.0);
@@ -177,20 +177,20 @@ auton = new Auton_Center_2P(driveTrain, shooter, intake, false);
       intake.setPower(0.0);
     }
     
-/* 
+ 
     //Climber Controls
     if(opController.getPOV() == 180){ //Climb Up
-      climber.setPowerTogether(-0.5);
+      climber.setPowerTogether(-0.2);
     }else if(opController.getPOV() == 0){ //Climb Down
-      climber.setPowerTogether(0.5);
+      climber.setPowerTogether(0.2);
     }else if(opController.getPOV() == 90){ //Climb Down Left
-      climber.setLeftPower(-0.5);
+      climber.setLeftPower(-0.1);
     }else if(opController.getPOV()== 270){ //Climb Down Right
-      climber.setRightPower(-0.5);
+      climber.setRightPower(-0.1);
     }else{ //Turn off power
       climber.setPowerTogether(0);
     }
-*/
+
 
     //Puts a bool to the shuffleboard saying if we have a piece.
     intakePieceField.setBoolean(intake.hasPiece());
