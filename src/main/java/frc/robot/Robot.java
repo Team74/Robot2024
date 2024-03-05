@@ -63,7 +63,7 @@ public class Robot extends TimedRobot {
     //Autons
     private static final String auDefaultAuton = "Default_Auton";
     private static final String auAmp_2P = "Amp_2_Piece";
-    private static final String auAmp_4P = "Amp_4_Piece";
+    private static final String auSource_2P = "Source_2_Piece";
     private static final String auShootMove = "Shoot_Move";
     private static final String auCenter_2P = "Center_2_Piece";
 
@@ -85,13 +85,18 @@ public class Robot extends TimedRobot {
     autonChooser.addOption("Amp Side 2 Piece", auAmp_2P);
     autonChooser.addOption("Shoot and Move", auShootMove);
     autonChooser.addOption("Center 2 Piece", auCenter_2P);
+    autonChooser.addOption("Source 2 Piece", auSource_2P);
 
     Shuffleboard.getTab("Drive3").add(autonChooser);
     
   }
 
   @Override
-  public void robotPeriodic() {}
+  public void robotPeriodic() {
+    if(autonChooser.getSelected() == null || autonChooser.getSelected() == "" || Shuffleboard.getTab("Drive3") == null){
+      System.out.println("Auton Selector Null");
+    }
+  }
 
   @Override
   public void autonomousInit() {
@@ -106,8 +111,8 @@ public class Robot extends TimedRobot {
       autoGyroOffset = -54.6; 
       break;
 
-      case auAmp_4P:
-      auton = new Auton_AmpSide_4P(driveTrain, shooter, intake, false);
+      case auSource_2P:
+      auton = new Auton_SourceSide_2P(driveTrain, shooter, intake, false);
       autoGyroOffset = -54.6; 
       break;
 
