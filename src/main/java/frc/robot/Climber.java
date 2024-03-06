@@ -20,7 +20,7 @@ public class Climber {
     //Moves the climber together, they should be in sync
     void setPowerTogether(double power){
         leftClimber.set(power);
-        rightClimber.set(power);
+        rightClimber.set(-power);
     }
 
     //Set the power of the right one only, used to make them in sync 

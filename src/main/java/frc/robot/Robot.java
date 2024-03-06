@@ -165,7 +165,7 @@ public class Robot extends TimedRobot {
 
     }else if(driverController.controller.getBButton()){
       //The velocity is in rotations per second
-      shooter.setTargetRPS(9.5); //3.5
+      shooter.setTargetRPS(3.5); //3.5
 
     }else{
       shooter.setPower(0.0);
@@ -185,13 +185,13 @@ public class Robot extends TimedRobot {
  
     //Climber Controls
     if(opController.getPOV() == 180){ //Climb Up
-      climber.setPowerTogether(-0.2);
+      climber.setPowerTogether(-0.6);
     }else if(opController.getPOV() == 0){ //Climb Down
-      climber.setPowerTogether(0.2);
+      climber.setPowerTogether(0.6);
     }else if(opController.getPOV() == 90){ //Climb Down Left
-      climber.setLeftPower(-0.1);
+      climber.setLeftPower(-0.3);
     }else if(opController.getPOV()== 270){ //Climb Down Right
-      climber.setRightPower(-0.1);
+      climber.setRightPower(-0.3);
     }else{ //Turn off power
       climber.setPowerTogether(0);
     }
