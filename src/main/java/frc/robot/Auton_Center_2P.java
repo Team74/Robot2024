@@ -36,8 +36,8 @@ public class Auton_Center_2P extends Auton {
             driveBase.driveSetWithGyro(0, 1, 0, 0.7);
         }else if(time < 6){
             shooter.setTargetRPS(80);
-            driveBase.driveSetWithGyro(0, 1, 0, 0.7);
-        }else if(time < 7){ //shoot
+            driveBase.driveSetWithGyro(0, 1, 0, 0.6);
+        }else if(time < 6.5){ //shoot
             shooter.setTargetRPS(80);
             driveBase.driveSetWithGyro(0, 0, 0, 0);
             intake.setPower(0.8);

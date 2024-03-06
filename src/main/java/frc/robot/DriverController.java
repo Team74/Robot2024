@@ -40,10 +40,12 @@ public class DriverController {
             drive.resetGyro();
         }
 
-        if(controller.getLeftBumperPressed()){
-            powerMulti = MathUtil.clamp(powerMulti - gearAmount, 0.5, 1.5);
-        }else if(controller.getRightBumperPressed()){
-            powerMulti = MathUtil.clamp(powerMulti + gearAmount, 0.5, 1.5);
+        if(controller.getLeftBumper()){
+            powerMulti = 0.5;
+        }else if(controller.getRightBumper()){
+            powerMulti = 1.5;
+        }else{
+            powerMulti = 1.0;
         }
 
     }

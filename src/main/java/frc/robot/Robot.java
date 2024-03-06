@@ -158,12 +158,20 @@ public class Robot extends TimedRobot {
     //testSwerveModule.setModulePower(1, 0);
     //System.out.println(testEncoder.getDoubleValue());
 
+    /* Operator Controls 
+     * A = Shoot, B = Bloop onto Amp
+     * LT = Intake, RT = Outtake, RB = Intake until Piece
+     * X and Y are Unused, going to be for Amp
+     * D Pad for Climber, LB for modified climber
+     * Sticks are Unused 
+    */
+
     //Drive Controls
     if(opController.getAButton())
     {
       shooter.setTargetRPS(90);
 
-    }else if(driverController.controller.getBButton()){
+    }else if(opController.getBButton()){
       //The velocity is in rotations per second
       shooter.setTargetRPS(3.5); //3.5
 
@@ -188,10 +196,14 @@ public class Robot extends TimedRobot {
       climber.setPowerTogether(-0.6);
     }else if(opController.getPOV() == 0){ //Climb Down
       climber.setPowerTogether(0.6);
-    }else if(opController.getPOV() == 90){ //Climb Down Left
+    }else if(opController.getPOV() == 90 && !opController.getLeftBumper()){ //Climb Down Left
       climber.setLeftPower(-0.3);
-    }else if(opController.getPOV()== 270){ //Climb Down Right
+    }else if(opController.getPOV()== 270 && !opController.getLeftBumper()){ //Climb Down Right
       climber.setRightPower(-0.3);
+    }else if(opController.getPOV() == 90 && opController.getLeftBumper()){ //Climb Up Left
+      climber.setLeftPower(0.3);
+    }else if(opController.getPOV()== 270 && opController.getLeftBumper()){ //Climb Up Right
+      climber.setRightPower(0.3);
     }else{ //Turn off power
       climber.setPowerTogether(0);
     }
