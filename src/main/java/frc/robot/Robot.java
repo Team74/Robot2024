@@ -43,6 +43,7 @@ public class Robot extends TimedRobot {
    */
 
    SwerveDrive driveTrain;
+   Dumper dumper = new Dumper(3, 4);
    Climber climber = new Climber(4, 33);
    Intake intake = new Intake(20,32);
    Shooter shooter = new Shooter(48, 49);
@@ -213,10 +214,19 @@ public class Robot extends TimedRobot {
     intakePieceField.setBoolean(intake.hasPiece());
     gyroAngleField.setDouble(driveTrain.gyro.getAngle());
 
+    if(opController.getYButtonPressed()){
+      dumper.setAngle(45);
+    }else if(opController.getXButtonPressed()){
+      dumper.setAngle(0);
+    }
+    System.out.println("Left: " + dumper.leftServo.getAngle() + " Right: " + dumper.rightServo.getAngle());
+
+
   }
 
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {dumper.setSpeed();
+  }
 
   @Override
   public void disabledPeriodic() {}
