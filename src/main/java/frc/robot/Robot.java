@@ -43,7 +43,7 @@ public class Robot extends TimedRobot {
    */
 
    SwerveDrive driveTrain;
-   Dumper dumper = new Dumper(3, 4);
+   Dumper dumper = new Dumper(29, 6);
    Climber climber = new Climber(4, 33);
    Intake intake = new Intake(20,32);
    Shooter shooter = new Shooter(48, 49);
@@ -215,12 +215,13 @@ public class Robot extends TimedRobot {
     gyroAngleField.setDouble(driveTrain.gyro.getAngle());
 
     if(opController.getYButtonPressed()){
-      dumper.setAngle(45);
+      dumper.close();
     }else if(opController.getXButtonPressed()){
-      dumper.setAngle(0);
+      dumper.open();
     }
-    System.out.println("Left: " + dumper.leftServo.getAngle() + " Right: " + dumper.rightServo.getAngle());
 
+    System.out.println(dumper.getEncoderAngle());
+   // System.out.println("Left: " + dumper.leftServo.getAngle() + " Right: " + dumper.rightServo.getAngle());
 
   }
 
