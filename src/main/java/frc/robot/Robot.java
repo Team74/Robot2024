@@ -170,6 +170,7 @@ public class Robot extends TimedRobot {
     System.out.println(relativeEncoder.getVelocity());
 
     //Stuff to test if swerve is going max speed
+    System.out.println(intake.hasPieceFar());
 
     //testSwerveModule.setModulePower(1, 0);
     //System.out.println(testEncoder.getDoubleValue());

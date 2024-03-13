@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 public class Intake {
        CANSparkMax intakeTop, intakeBottom;
        DigitalInput limitSensor = new DigitalInput(4);
+        DigitalInput limitSensorFar = new DigitalInput(9);
+
 
     Intake(int intakeTopID, int intakeBottomID){
     intakeTop = new CANSparkMax(intakeTopID, MotorType.kBrushless);
@@ -38,5 +40,9 @@ public class Intake {
     Boolean hasPiece()
     {
         return limitSensor.get();
+    }
+
+    Boolean hasPieceFar(){
+        return limitSensorFar.get();
     }
 }
