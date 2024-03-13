@@ -232,10 +232,34 @@ public class Robot extends TimedRobot {
 
 
     //Puts a bool to the shuffleboard saying if we have a piece.
-    intakePieceField.setBoolean(intake.hasPiece());
+    intakePieceField.setBoolean(!intake.hasPiece());
     gyroAngleField.setDouble(driveTrain.gyro.getAngle());
 
+
+    //50 ticks per sec
+    //one button flip
     if(opController.getYButton()){
+      for (int i = 0; i < 152; i++) {
+        if(i < 70){//bloop
+          shooter.setTargetRPS(3.5);
+          intake.setPower(0.9);
+        }else if(i < 100){//flip out
+          shooter.setPower(0);
+          intake.setPower(0);
+          dumper.setPower(0.15);
+        }else if(i < 120){//wait
+          dumper.setPower(0);
+        }else if(i < 150){//flip back
+          dumper.setPower(-0.50);
+        }else{ //reset
+          shooter.setPower(0);
+          intake.setPower(0);
+          dumper.setPower(0);
+        }
+      }
+    }
+
+    if(opController.getPOV() == 90){
       //dumper.close();
       dumper.setPower(0.15);
     }else if(opController.getXButton()){
