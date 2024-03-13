@@ -165,10 +165,11 @@ public class Robot extends TimedRobot {
     //driveTrain.driveSet(0, -1, 0, 0.3);
     //frontRight.setDrive(0.25);
 
-    //driverController.run();
+    driverController.run();
+    RelativeEncoder relativeEncoder = driveTrain.backLeft.driveMotorCont.getEncoder();
+    System.out.println(relativeEncoder.getVelocity());
 
     //Stuff to test if swerve is going max speed
-    RelativeEncoder frontLeftSwerveEncoder = driveTrain.frontLeft.driveMotorCont.getEncoder();
 
     //testSwerveModule.setModulePower(1, 0);
     //System.out.println(testEncoder.getDoubleValue());
@@ -189,6 +190,7 @@ public class Robot extends TimedRobot {
     }else if(opController.getBButton()){
       //The velocity is in rotations per second
       shooter.setTargetRPS(3.5); //3.5
+      intake.setPower(0.8);
     }else if(opController.getRightTriggerAxis() > 0.3){
       shooter.setTargetRPS(90);
       if(shooter.getRPS() > 88){
