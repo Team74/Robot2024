@@ -15,11 +15,11 @@ public class Auton_Move extends Auton {
         }else if (time < 2){ //Feed piece into Shooter
             shooter.setTargetRPS(80);
             intake.setPower(0.8);
-        }else if (time < 6){ //Turn off Shooter and Intake, move away
+        }else if (time < 10){ //Turn off Shooter and Intake
             shooter.setPower(0);
             intake.setPower(0);
             driveBase.driveSet(0, 0, 0, 0);
-        }else if(time < 8){//Wait for a while, then drive out
+        }else if(time < 11){//Wait for a while, then drive out
             driveBase.driveSet(0, -1, 0, 1);
         }else{ //Auton Done, stop motors
             shooter.setPower(0);

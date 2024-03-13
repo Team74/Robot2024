@@ -28,7 +28,7 @@ public class Dumper {
     void pidInit(){
         anglePIDController.reset();
         anglePIDController.enableContinuousInput(0, 4096); //this means that when it hits 0, it will go to 4096. It acts like a circle
-        anglePIDController.setTolerance(70);
+        anglePIDController.setTolerance(150);
         anglePIDController.setD(0.00001);
         anglePIDController.setI(0.000);
         anglePIDController.setP(0.05);
@@ -60,7 +60,7 @@ public class Dumper {
     }
     void open(){
         int angle;
-        int num = closeEnc - 500;
+        int num = closeEnc - 400;
         if (num < 0){
             angle = encoder.encoderMax + num;
         }else{
@@ -70,6 +70,9 @@ public class Dumper {
     }
     void setSpeed(){
        
+    }
+    void setPower(double power){
+        dumperMotor.set(power);
     }
 
 }

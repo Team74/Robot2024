@@ -83,10 +83,10 @@ public class Robot extends TimedRobot {
     CameraServer.startAutomaticCapture(0);
 
     autonChooser.setDefaultOption("Default Auto", auDefaultAuton);
-    autonChooser.addOption("Amp Side 2 Piece", auAmp_2P);
+    autonChooser.addOption("Right 2 Piece", auAmp_2P);
     autonChooser.addOption("Shoot and Move", auShootMove);
     autonChooser.addOption("Center 2 Piece", auCenter_2P);
-    autonChooser.addOption("Source 2 Piece", auSource_2P);
+    autonChooser.addOption("Left 2 Piece", auSource_2P);
 
     Shuffleboard.getTab("Drive3").add(autonChooser);
     
@@ -105,21 +105,26 @@ public class Robot extends TimedRobot {
     timer.reset();
     timer.start();
     autonSelected = autonChooser.getSelected();
+    System.out.println(autonSelected);
 
     switch(autonSelected){
       case auAmp_2P:
       auton = new Auton_AmpSide_2P(driveTrain, shooter, intake, false);
+      System.out.println("Running Right Auto");
       autoGyroOffset = -54.6; 
       break;
 
       case auSource_2P:
       auton = new Auton_SourceSide_2P(driveTrain, shooter, intake, false);
       autoGyroOffset = -54.6; 
+      System.out.println("Running Left Auto");
       break;
 
       case auCenter_2P:
       auton = new Auton_Center_2P(driveTrain, shooter, intake, false);
+      System.out.println("Running Center Auto");
       autoGyroOffset = 0.0;
+      break;
 
       case auShootMove:
       auton = new Auton_Move(driveTrain, shooter, intake, false);
@@ -127,7 +132,9 @@ public class Robot extends TimedRobot {
       break;
     default:
       System.out.println("Auton Failed, Defualt Auto");
-      auton = new Auton_Center_2P(driveTrain, shooter, intake, false);
+      auton = new Auton_Move(driveTrain, shooter, intake, false);
+      System.out.println("Running No Auto");
+      break;
     }
 
     //This is so we can start against the speaker and still have 0 be away from driver station. Don't need a offset for center spot. 
@@ -214,13 +221,17 @@ public class Robot extends TimedRobot {
     intakePieceField.setBoolean(intake.hasPiece());
     gyroAngleField.setDouble(driveTrain.gyro.getAngle());
 
-    if(opController.getYButtonPressed()){
-      dumper.close();
-    }else if(opController.getXButtonPressed()){
-      dumper.open();
+    if(opController.getYButton()){
+      //dumper.close();
+      dumper.setPower(0.15);
+    }else if(opController.getXButton()){
+      //dumper.open();
+      dumper.setPower(-0.50);
+    }else{
+      dumper.setPower(0);
     }
 
-    System.out.println(dumper.getEncoderAngle());
+    System.out.println(dumper.getEncoderAngle() + " Power " + dumper.powerFinal);
    // System.out.println("Left: " + dumper.leftServo.getAngle() + " Right: " + dumper.rightServo.getAngle());
 
   }

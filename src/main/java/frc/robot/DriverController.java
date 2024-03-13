@@ -43,7 +43,7 @@ public class DriverController {
         if(controller.getLeftBumper()){
             powerMulti = 0.5;
         }else if(controller.getRightBumper()){
-            powerMulti = 1.5;
+            powerMulti = 2.3;
         }else{
             powerMulti = 1.0;
         }
