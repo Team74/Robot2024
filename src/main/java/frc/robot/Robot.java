@@ -4,7 +4,9 @@
 
 package frc.robot;
 
+import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.cameraserver.CameraServer;
@@ -162,7 +164,12 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     //driveTrain.driveSet(0, -1, 0, 0.3);
     //frontRight.setDrive(0.25);
-    driverController.run();
+
+    //driverController.run();
+
+    //Stuff to test if swerve is going max speed
+    RelativeEncoder frontLeftSwerveEncoder = driveTrain.frontLeft.driveMotorCont.getEncoder();
+
     //testSwerveModule.setModulePower(1, 0);
     //System.out.println(testEncoder.getDoubleValue());
 
@@ -174,7 +181,7 @@ public class Robot extends TimedRobot {
      * Sticks are Unused 
     */
 
-    //Drive Controls
+    //Shooter Controls
     if(opController.getAButton())
     {
       shooter.setTargetRPS(90);
@@ -182,7 +189,11 @@ public class Robot extends TimedRobot {
     }else if(opController.getBButton()){
       //The velocity is in rotations per second
       shooter.setTargetRPS(3.5); //3.5
-
+    }else if(opController.getRightTriggerAxis() > 0.3){
+      shooter.setTargetRPS(90);
+      if(shooter.getRPS() > 88){
+        intake.setPower(0.9);
+      }
     }else{
       shooter.setPower(0.0);
     }
@@ -190,11 +201,11 @@ public class Robot extends TimedRobot {
     //Intake Controls
     if(opController.getLeftTriggerAxis() > 0.3){ //Intake
       intake.setPower(0.9);
-    }else if(opController.getRightTriggerAxis() > 0.3){ //Outtake
+    }else if(opController.getRightBumper()){ //Outtake
       intake.setPower(-0.2);
-    }else if(opController.getRightBumper()){ //Intake until piece
+    }else if(opController.getLeftBumper()){ //Intake until piece
       intake.setPowerUntilPiece(0.9);
-    }else{ //Stop Motor if no controls
+    }else if(!opController.getBButton() && !(opController.getRightTriggerAxis() > 0.3)){ //Stop Motor if no controls and if the shooter is not asking for intake controls
       intake.setPower(0.0);
     }
     
@@ -204,13 +215,13 @@ public class Robot extends TimedRobot {
       climber.setPowerTogether(-0.6);
     }else if(opController.getPOV() == 0){ //Climb Down
       climber.setPowerTogether(0.6);
-    }else if(opController.getPOV() == 90 && !opController.getLeftBumper()){ //Climb Down Left
+    }else if(opController.getLeftY() <  -0.3){ //Climb Down Left
       climber.setLeftPower(-0.3);
-    }else if(opController.getPOV()== 270 && !opController.getLeftBumper()){ //Climb Down Right
+    }else if(opController.getRightY() < -0.3){ //Climb Down Right
       climber.setRightPower(-0.3);
-    }else if(opController.getPOV() == 90 && opController.getLeftBumper()){ //Climb Up Left
+    }else if(opController.getLeftY() > 0.3){ //Climb Up Left
       climber.setLeftPower(0.3);
-    }else if(opController.getPOV()== 270 && opController.getLeftBumper()){ //Climb Up Right
+    }else if(opController.getRightY() > 0.3){ //Climb Up Right
       climber.setRightPower(0.3);
     }else{ //Turn off power
       climber.setPowerTogether(0);
@@ -231,7 +242,6 @@ public class Robot extends TimedRobot {
       dumper.setPower(0);
     }
 
-    System.out.println(dumper.getEncoderAngle() + " Power " + dumper.powerFinal);
    // System.out.println("Left: " + dumper.leftServo.getAngle() + " Right: " + dumper.rightServo.getAngle());
 
   }

@@ -77,4 +77,9 @@ public class Shooter {
       falconShooterLeftLeader.set(power);
     }
 
+    double getRPS(){
+      double flyWheelRPS = falconShooterLeftLeader.getVelocity().getValue();
+      return flyWheelRPS;
+    }
+
 }
