@@ -2,14 +2,14 @@ package frc.robot;
 
 public class Auton_SourceSide_2P extends Auton{
 
-    double blueDirection = 1.0;
+    double dir = 1.0;
     public Auton_SourceSide_2P(SwerveDrive driveBase, Shooter shooter, Intake intake, boolean isBlue) {
         super(driveBase, shooter, intake, isBlue);
         //TODO Auto-generated constructor stub
         if(isBlue){
-            blueDirection = -1.0;
+            dir = -1.0;
         }else{
-            blueDirection = 1.0;
+            dir = 1.0;
         }
     }
 
