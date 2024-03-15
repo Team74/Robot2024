@@ -28,7 +28,7 @@ public class Intake {
     void setPowerUntilPiece(double power){
         if(limitSensor.get())
         {
-            System.out.println(limitSensor.get());
+            //System.out.println(limitSensor.get());
             intakeTop.set(power);
             intakeBottom.set(power);
         }else{

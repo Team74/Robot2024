@@ -28,14 +28,14 @@ public class Auton_AmpSide_2P extends Auton {
            driveBase.driveSetWithGyro(-0.3, 0, 0, 0.9);
         }else if (time < 4.5){ // drive to next piece
             intake.setPowerUntilPiece(0.8);
-            driveBase.driveSetWithGyro(0,-1, 0.2, 0.7);
+            driveBase.driveSetWithGyro(0,-1, 0.55, 0.7);
         }else if (time < 6){//stop for a sec
             intake.setPowerUntilPiece(0.8);
             driveBase.driveSetWithGyro(0,0, 0, 0.0);
         }else if (time < 8){ // drive back
             shooter.setPower(0);
             intake.setPowerUntilPiece(0.8);
-            driveBase.driveSetWithGyro(0, 1, -0.2, 0.7);
+            driveBase.driveSetWithGyro(0, 1, -0.55, 0.62);
         }else if (time < 9){// turn on motors
             shooter.setTargetRPS(90);
             intake.setPowerUntilPiece(0.8);
@@ -43,10 +43,31 @@ public class Auton_AmpSide_2P extends Auton {
         }else if(time < 9.5){ //spin to speaker
             shooter.setTargetRPS(90);
             intake.setPowerUntilPiece(0.8);
-            driveBase.driveSet(-0.3,0,0,0);
-        }else if(time < 11.5){ // shoot
+            driveBase.driveSet(0.35,0,0,0.9);
+        }else if(time < 11){ // shoot
             shooter.setTargetRPS(90);
+            driveBase.driveSet(0,0,0,0);
             intake.setPower(0.8);
+        }else if(time < 12.5){
+            shooter.setPower(0);
+            intake.setPowerUntilPiece(0);
+            driveBase.driveSetWithGyro(-0.2,-1, 0.55, 0.7);
+        }else if(time < 14.5){
+            shooter.setPower(0);
+            intake.setPowerUntilPiece(0.8);
+            driveBase.driveSetWithGyro(0,-1, 0.15, 1.3);
+        }else if(time < 16){
+            shooter.setPower(0);
+            intake.setPowerUntilPiece(0.8);
+            driveBase.driveSetWithGyro(0,-1, 0, 0.1);
+        }else if(time < 17){
+            shooter.setPower(0);
+            intake.setPowerUntilPiece(0.8);
+            driveBase.driveSetWithGyro(0,1, 0, 0.7);
+        }else if(time < 18){
+            shooter.setTargetRPS(20);
+            intake.setPower(0.8);
+            driveBase.driveSetWithGyro(0,0, 0, 0);
         }else{
             shooter.setPower(0);
             intake.setPower(0);

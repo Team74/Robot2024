@@ -148,10 +148,10 @@ public class SwerveDrive {
 
     void driveSetWithGyro(double rotatX, double transY, double transX, double powerMulti) {
 
-        if((1.5 - lastGyroAngle > gyro.getAngle() || gyro.getAngle() > 1.5 + lastGyroAngle) && rotatX == 0)
+        if((0.85 - lastGyroAngle > gyro.getAngle() || gyro.getAngle() > 0.85 + lastGyroAngle) && rotatX == 0)
         {
-            rotatX = (gyro.getAngle() - lastGyroAngle) * -0.1;
-        }else if(Math.abs(rotatX) > 0.1){
+            rotatX = (gyro.getAngle() - lastGyroAngle) * -0.065;
+        }else if(Math.abs(rotatX) > 0.05){
             System.out.println("No rotate");
             lastGyroAngle = gyro.getAngle();
             System.out.println("Reset");

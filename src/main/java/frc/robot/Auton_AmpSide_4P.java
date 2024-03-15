@@ -3,6 +3,8 @@ package frc.robot;
 public class Auton_AmpSide_4P extends Auton{
 
    Auton twoPieceAuto;
+   String currentState = "Starting";
+    int time;
   
     public Auton_AmpSide_4P(SwerveDrive driveBase, Shooter shooter, Intake intake, boolean isBlue) {
         super(driveBase, shooter, intake, isBlue);
@@ -13,8 +15,30 @@ public class Auton_AmpSide_4P extends Auton{
     //NOTE: +X means move forward, +Y means move to the left. 
     //TODO make it work on the blue side 
     //2 Piece Auto from Amp side position. Start with robot hugging the Speaker
-    public void run(double time){
-       if(time < 9.1){
+    public void run(double time2){
+       switch (currentState){
+        case "Starting":
+        time = 0;
+        currentState = "Drive Forward";
+        break;
+
+        case "Drive Forward":
+        if(time > 50){
+            currentState = "Intake";
+            time = 0;
+        }
+        break;
+
+        case "Intake":
+
+        break;
+       }
+       time++;
+    }
+    
+    
+}
+/*if(time < 9.1){
         twoPieceAuto.run(time); //Run the two piece auto, as this extends it
        }else if(time < 10){ //drive away from speaker
         driveBase.driveSet(1, 0.3, 0.5, 1.5);
@@ -38,7 +62,4 @@ public class Auton_AmpSide_4P extends Auton{
         shooter.setPower(0);
         intake.setPower(0);
         driveBase.driveSet(0, 0, 0, 0);
-        }//TODO make the robot face the driver station and reset gyro
-    }
-    
-}
+        }//TODO make the robot face the driver station and reset gyro */

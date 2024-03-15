@@ -59,6 +59,7 @@ public class Shooter {
       System.out.println("Could not apply configs, error code: " + status.toString());
     }
 
+
     // The right motor is CW+
     //currentConfigs.Inverted = InvertedValue.Clockwise_Positive;
     //falconShooterRightFollower.getConfigurator().apply(currentConfigs);
