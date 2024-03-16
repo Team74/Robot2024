@@ -27,6 +27,8 @@ public class Shooter {
     // The left motor is CCW+
     currentConfigs.Inverted = InvertedValue.CounterClockwise_Positive;
     falconShooterLeftLeader.getConfigurator().apply(currentConfigs);
+ 
+    //currentConfigs.NeutralMode(NeutralMode.Coast);
 
     TalonFXConfiguration configs = new TalonFXConfiguration(); 
 

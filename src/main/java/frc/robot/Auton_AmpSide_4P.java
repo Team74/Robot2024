@@ -29,17 +29,20 @@ public class Auton_AmpSide_4P extends Auton{
         shooter.setTargetRPS(80);
         intake.setPower(0);
         driveBase.driveSetWithGyro(0.3, 0.1, 0, 1.5);
-        if(time > 55){
+        if(time > 55 || driveBase.gyro.getAngle() > 35.5){
             currentState = "Shoot Note 1";
             time = 0;
         }
         break;
 
         case "Shoot Note 1":
+        driveBase.driveSetWithGyro(0, 0, 0, 0.7);
+        shooter.setTargetRPS(90);
+        if(time > 20){
         shooter.setTargetRPS(80);
         intake.setPower(0.8);
-        driveBase.driveSetWithGyro(0, 0, 0, 0.7);
-        if(time > 25 || intake.hasPiece() == false){
+        }
+        if(time > 50 || intake.hasPiece() == false){
             currentState = "Spin Back 1";
             time = 0;
         }
@@ -48,8 +51,8 @@ public class Auton_AmpSide_4P extends Auton{
         case "Spin Back 1":
         shooter.setPower(0);
         intake.setPowerUntilPiece(0);
-        driveBase.driveSetWithGyro(-0.3, 0, 0, 0.9);
-        if(time > 90){
+        driveBase.driveSetWithGyro(-0.3, -0.1, 0, 1.5);
+        if(time > 90 || driveBase.gyro.getAngle() < 2){
             currentState = "Drive to Piece 1";
             time = 0;
         }
@@ -68,7 +71,7 @@ public class Auton_AmpSide_4P extends Auton{
         shooter.setPower(0);
         intake.setPowerUntilPiece(0.8);
         driveBase.driveSetWithGyro(0, 1, -0.55, 0.62);
-        if(time > 50){
+        if(time > 100){
             currentState = "Spin Back 2";
             time = 0;
        }
@@ -78,20 +81,23 @@ public class Auton_AmpSide_4P extends Auton{
        shooter.setTargetRPS(90);
        intake.setPowerUntilPiece(0.8);
        driveBase.driveSet(0.35,0,0,0.9);
-       if(time > 75){
+       if(time > 75 ||  driveBase.gyro.getAngle() > 35.5){
             currentState = "Shoot 2";
             time = 0;
        }
        break;
 
        case "Shoot 2":
-       shooter.setTargetRPS(90);
-       driveBase.driveSet(0,0,0,0);
-       intake.setPower(0.8);
-       if(time > 50 || intake.hasPiece() == false){
-         currentState = "Leave 1";
+       driveBase.driveSetWithGyro(0, 0, 0, 0.7);
+        shooter.setTargetRPS(90);
+        if(time > 20){
+        shooter.setTargetRPS(80);
+        intake.setPower(0.8);
+        }
+        if(time > 50 || intake.hasPiece() == false){
+            currentState = "Leave 1";
             time = 0;
-       }
+        }
        break;
 
        case "Leave 1":
@@ -159,7 +165,7 @@ public class Auton_AmpSide_4P extends Auton{
         break;
 
     }
-    System.out.println(currentState);
+    System.out.println(currentState + " Time: " + time);
     time++;
 }
     

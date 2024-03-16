@@ -270,6 +270,7 @@ public class Robot extends TimedRobot {
     }
 
    // System.out.println("Left: " + dumper.leftServo.getAngle() + " Right: " + dumper.rightServo.getAngle());
+   System.out.println(driveTrain.gyro.getAngle());
 
   }
 

@@ -152,12 +152,12 @@ public class SwerveDrive {
         {
             rotatX = (gyro.getAngle() - lastGyroAngle) * -0.065;
         }else if(Math.abs(rotatX) > 0.05){
-            System.out.println("No rotate");
+            //System.out.println("No rotate");
             lastGyroAngle = gyro.getAngle();
-            System.out.println("Reset");
+            //System.out.println("Reset");
         }
         
-        System.out.println("Rotate x " + rotatX + "Last Gyro Angle " + lastGyroAngle + " Current Gyro " + gyro.getAngle());
+        //System.out.println("Rotate x " + rotatX + "Last Gyro Angle " + lastGyroAngle + " Current Gyro " + gyro.getAngle());
 
        ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
             transX, transY, rotatX/275, Rotation2d.fromDegrees(gyro.getAngle()+90.0));
