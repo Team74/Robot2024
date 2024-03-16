@@ -19,22 +19,131 @@ public class Auton_AmpSide_4P extends Auton{
        switch (currentState){
         case "Starting":
         time = 0;
-        currentState = "Drive Forward";
+        driveBase.driveSetWithGyro(0, -1, 0, 0);
+        intake.setPower(0);
+        shooter.setPower(0);
+        currentState = "Rev Up 1";
         break;
 
-        case "Drive Forward":
-        if(time > 50){
-            currentState = "Intake";
+        case "Rev Up 1":
+        shooter.setTargetRPS(80);
+        intake.setPower(0);
+        driveBase.driveSetWithGyro(0.3, 0.1, 0, 1.5);
+        if(time > 65){
+            currentState = "Shoot Note 1";
             time = 0;
         }
         break;
 
-        case "Intake":
-
+        case "Shoot Note 1":
+        shooter.setTargetRPS(80);
+        intake.setPower(0.8);
+        driveBase.driveSetWithGyro(0, 0, 0, 0.7);
+        if(time > 25 || intake.hasPiece() == false){
+            currentState = "Spin Back 1";
+            time = 0;
+        }
         break;
+
+        case "Spin Back 1":
+        shooter.setPower(0);
+        intake.setPowerUntilPiece(0);
+        driveBase.driveSetWithGyro(-0.3, 0, 0, 0.9);
+        if(time > 90){
+            currentState = "Drive to Piece 1";
+            time = 0;
+        }
+
+        case "Drive to Piece 1":
+        intake.setPowerUntilPiece(0.8);
+        driveBase.driveSetWithGyro(0,-1, 0.55, 0.7);
+        if(time > 75 || intake.hasPiece() == true){
+            currentState = "Drive Back 1";
+            time = 0;
+        }
+
+        case "Drive Back 1":
+        shooter.setPower(0);
+        intake.setPowerUntilPiece(0.8);
+        driveBase.driveSetWithGyro(0, 1, -0.55, 0.62);
+        if(time > 50){
+            currentState = "Spin Back 2";
+            time = 0;
        }
-       time++;
+
+       case "Spin Back 2":
+       shooter.setTargetRPS(90);
+       intake.setPowerUntilPiece(0.8);
+       driveBase.driveSet(0.35,0,0,0.9);
+       if(time > 75){
+            currentState = "Shoot 2";
+            time = 0;
+       }
+
+       case "Shoot 2":
+       shooter.setTargetRPS(90);
+       driveBase.driveSet(0,0,0,0);
+       intake.setPower(0.8);
+       if(time > 50 || intake.hasPiece() == false){
+         currentState = "Leave 1";
+            time = 0;
+       }
+
+       case "Leave 1":
+       shooter.setPower(0);
+        intake.setPowerUntilPiece(0);
+        driveBase.driveSetWithGyro(-0.2,-1, 0.55, 0.7);
+        if(time > 100){
+            currentState = "Leave 2";
+            time = 0;
+        }
+
+        case "Leave 2":
+       shooter.setPower(0);
+        intake.setPowerUntilPiece(0);
+        driveBase.driveSetWithGyro(0,-1, 0.15, 1.3);
+        if(time > 75){
+            currentState = "Grab 1";
+            time = 0;
+        }
+
+        case "Grab 1":
+        shooter.setPower(0);
+        intake.setPowerUntilPiece(0.8);
+        driveBase.driveSetWithGyro(0,-1, 0, 0.1);
+        if(time > 40 || intake.hasPiece() == true){
+            currentState = "Back Up 1";
+            time = 0;
+        }
+
+        case "Back Up 1":
+        shooter.setPower(0);
+        intake.setPowerUntilPiece(0.8);
+        driveBase.driveSetWithGyro(0,1, 0, 0.7);
+        if(time > 50){
+            currentState = "Bloop 1";
+            time = 0;
+        }
+
+        case "Bloop 1":
+        shooter.setTargetRPS(15);
+        if(shooter.getRPS() > 13){
+            intake.setPower(0.8);
+        }
+        driveBase.driveSetWithGyro(0,1, 0, 0.1);
+        if(time > 30 || intake.hasPiece() == false){
+            currentState = "Stop";
+            time = 0;
+        }
+
+        case "Stop":
+        shooter.setPower(0);
+        intake.setPower(0);
+        driveBase.driveSet(0,0, 0, 0);
+
     }
+    time++;
+}
     
     
 }

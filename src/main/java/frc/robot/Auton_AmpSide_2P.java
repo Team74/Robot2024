@@ -59,7 +59,6 @@ public class Auton_AmpSide_2P extends Auton {
         }else if(time < 16){
             shooter.setPower(0);
             intake.setPowerUntilPiece(0.8);
-            driveBase.driveSetWithGyro(0,-1, 0, 0.1);
         }else if(time < 17){
             shooter.setPower(0);
             intake.setPowerUntilPiece(0.8);
