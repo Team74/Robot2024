@@ -27,7 +27,7 @@ public class Auton_Center_2P extends Auton {
             shooter.setPower(0);
             currentState = "Shoot'n";
             time = 0;
-                break;
+            break;
             
             case "Shoot'n":
             driveBase.driveSet(0, -1, 0, 0);
@@ -38,23 +38,24 @@ public class Auton_Center_2P extends Auton {
                 if (intake.hasPiece() == false) {
                     shooter.setPower(0);
                     intake.setPower(0);
+                    time = 0;
                     currentState = "Drive'n To Peice";
                 }
             }
-            time = 0;
-                break;
+            
+            break;
 
             case "Drive'n To Peice":
             driveBase.driveSetWithGyro(0, -1, 0, 0.8);
             shooter.setPower(0);
             intake.setPowerUntilPiece(0.8);
-            if (intake.hasPiece() == true) {
+            if (intake.hasPiece() == true || time > 250) {
                 driveBase.driveSetWithGyro(0, -1, 0, 0);
                 intake.setPower(0);
+                time = 0;
                 currentState = "Drive'n Back";
             }
-            time = 0;
-                break;
+            break;
             
             case "Drive'n Back":
             if (intake.hasPiece() == true) {
@@ -62,22 +63,42 @@ public class Auton_Center_2P extends Auton {
                 if (time > 65) {
                     driveBase.driveSetWithGyro(0, -1, 0, 0);
                     currentState = "Shoote'n Again";
+                    time = 0;
                 }
             }
-            time = 0;
-                break;
+            
+            break;
 
             case "Shoote'n Again":
             shooter.setTargetRPS(80);
             intake.setPower(0);
             if (shooter.getRPS() > 77) {
                 intake.setPower(0.8);
+                if (intake.hasPiece() == false) {
+                    time = 0;
+                    currentState = "Leave'n";
+                }
             }
+           
+            break;
+
+            case "Leave'n":
+            driveBase.driveSetWithGyro(0, -1, 0, 0.8);
+            shooter.setPower(0);
+            intake.setPower(0);
+            if (time > 250) {
+                driveBase.driveSetWithGyro(0, -1, 0, 0);
+                currentState = "Stop'n";
+                time = 0;
+            }
+            break;
+
+            case "Stop'n":
+            driveBase.driveSet(0, 0, 0, 0);
+            shooter.setPower(0);
+            intake.setPower(0);
             time = 0;
-                break;
-            
-
-
+            break;
             }
         time++;
     }
