@@ -39,7 +39,7 @@ public class Intake {
 
     Boolean hasPiece()
     {
-        return limitSensor.get();
+        return !limitSensor.get();
     }
 
     Boolean hasPieceFar(){

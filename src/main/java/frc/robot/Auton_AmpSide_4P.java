@@ -29,7 +29,7 @@ public class Auton_AmpSide_4P extends Auton{
         shooter.setTargetRPS(80);
         intake.setPower(0);
         driveBase.driveSetWithGyro(0.3, 0.1, 0, 1.5);
-        if(time > 65){
+        if(time > 55){
             currentState = "Shoot Note 1";
             time = 0;
         }
@@ -53,6 +53,7 @@ public class Auton_AmpSide_4P extends Auton{
             currentState = "Drive to Piece 1";
             time = 0;
         }
+        break;
 
         case "Drive to Piece 1":
         intake.setPowerUntilPiece(0.8);
@@ -61,6 +62,7 @@ public class Auton_AmpSide_4P extends Auton{
             currentState = "Drive Back 1";
             time = 0;
         }
+        break;
 
         case "Drive Back 1":
         shooter.setPower(0);
@@ -70,6 +72,7 @@ public class Auton_AmpSide_4P extends Auton{
             currentState = "Spin Back 2";
             time = 0;
        }
+        break;
 
        case "Spin Back 2":
        shooter.setTargetRPS(90);
@@ -79,6 +82,7 @@ public class Auton_AmpSide_4P extends Auton{
             currentState = "Shoot 2";
             time = 0;
        }
+       break;
 
        case "Shoot 2":
        shooter.setTargetRPS(90);
@@ -88,6 +92,7 @@ public class Auton_AmpSide_4P extends Auton{
          currentState = "Leave 1";
             time = 0;
        }
+       break;
 
        case "Leave 1":
        shooter.setPower(0);
@@ -97,6 +102,7 @@ public class Auton_AmpSide_4P extends Auton{
             currentState = "Leave 2";
             time = 0;
         }
+        break;
 
         case "Leave 2":
        shooter.setPower(0);
@@ -106,6 +112,7 @@ public class Auton_AmpSide_4P extends Auton{
             currentState = "Grab 1";
             time = 0;
         }
+        break;
 
         case "Grab 1":
         shooter.setPower(0);
@@ -115,6 +122,7 @@ public class Auton_AmpSide_4P extends Auton{
             currentState = "Back Up 1";
             time = 0;
         }
+        break;
 
         case "Back Up 1":
         shooter.setPower(0);
@@ -124,6 +132,7 @@ public class Auton_AmpSide_4P extends Auton{
             currentState = "Bloop 1";
             time = 0;
         }
+        break;
 
         case "Bloop 1":
         shooter.setTargetRPS(15);
@@ -135,6 +144,7 @@ public class Auton_AmpSide_4P extends Auton{
             currentState = "Stop";
             time = 0;
         }
+        break;
 
         case "Stop":
         shooter.setPower(0);
@@ -142,6 +152,7 @@ public class Auton_AmpSide_4P extends Auton{
         driveBase.driveSet(0,0, 0, 0);
 
     }
+    System.out.println(currentState);
     time++;
 }
     

@@ -111,7 +111,7 @@ public class Robot extends TimedRobot {
 
     switch(autonSelected){
       case auAmp_2P:
-      auton = new Auton_AmpSide_2P(driveTrain, shooter, intake, false);
+      auton = new Auton_AmpSide_4P(driveTrain, shooter, intake, false);
       System.out.println("Running Right Auto");
       autoGyroOffset = -54.6; 
       break;
