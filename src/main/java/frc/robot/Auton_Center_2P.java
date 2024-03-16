@@ -16,9 +16,74 @@ public class Auton_Center_2P extends Auton {
                 firstTime = false;
                 timeToRun = time + 1;
             }*/
-    
-    public void run(double time){
-        if(time < 1){ //Turn on shooter, wait for rev up
+    int time;
+    String currentState = "Starting";
+
+    public void run(double time2){
+        switch (currentState) {
+            case "Starting":
+            driveBase.driveSet(0, -1, 0, 0);
+            intake.setPower(0);
+            shooter.setPower(0);
+            currentState = "Shoot'n";
+            time = 0;
+                break;
+            
+            case "Shoot'n":
+            driveBase.driveSet(0, -1, 0, 0);
+            shooter.setTargetRPS(80);
+            intake.setPower(0);
+            if (shooter.getRPS() > 77){
+                intake.setPower(0.8);
+                if (intake.hasPiece() == false) {
+                    shooter.setPower(0);
+                    intake.setPower(0);
+                    currentState = "Drive'n To Peice";
+                }
+            }
+            time = 0;
+                break;
+
+            case "Drive'n To Peice":
+            driveBase.driveSetWithGyro(0, -1, 0, 0.8);
+            shooter.setPower(0);
+            intake.setPowerUntilPiece(0.8);
+            if (intake.hasPiece() == true) {
+                driveBase.driveSetWithGyro(0, -1, 0, 0);
+                intake.setPower(0);
+                currentState = "Drive'n Back";
+            }
+            time = 0;
+                break;
+            
+            case "Drive'n Back":
+            if (intake.hasPiece() == true) {
+               driveBase.driveSetWithGyro(0, 1, 0, 0.7);
+                if (time > 65) {
+                    driveBase.driveSetWithGyro(0, -1, 0, 0);
+                    currentState = "Shoote'n Again";
+                }
+            }
+            time = 0;
+                break;
+
+            case "Shoote'n Again":
+            shooter.setTargetRPS(80);
+            intake.setPower(0);
+            if (shooter.getRPS() > 77) {
+                intake.setPower(0.8);
+            }
+            time = 0;
+                break;
+            
+
+
+            }
+        time++;
+    }
+}
+
+/* if(time < 1){ //Turn on shooter, wait for rev up
             driveBase.driveSetWithGyro(0, -1, 0, 0);
             shooter.setTargetRPS(80);
         }else if (time < 2.2){ //Feed preload into shooter, wait for piece to leave
@@ -45,6 +110,4 @@ public class Auton_Center_2P extends Auton {
             shooter.setPower(0);
             intake.setPower(0);
             driveBase.driveSet(0, 0, 0, 0); 
-        }
-    }
-}
+        } */
