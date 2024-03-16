@@ -150,6 +150,13 @@ public class Auton_AmpSide_4P extends Auton{
         shooter.setPower(0);
         intake.setPower(0);
         driveBase.driveSet(0,0, 0, 0);
+        break;
+
+        default: 
+        shooter.setPower(0);
+        intake.setPower(0);
+        driveBase.driveSet(0,0, 0, 0);
+        break;
 
     }
     System.out.println(currentState);
