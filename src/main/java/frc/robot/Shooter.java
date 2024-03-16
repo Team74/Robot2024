@@ -28,7 +28,7 @@ public class Shooter {
     currentConfigs.Inverted = InvertedValue.CounterClockwise_Positive;
     falconShooterLeftLeader.getConfigurator().apply(currentConfigs);
  
-    //currentConfigs.NeutralMode(NeutralMode.Coast);
+    currentConfigs.NeutralMode = NeutralModeValue.Coast;
 
     TalonFXConfiguration configs = new TalonFXConfiguration(); 
 

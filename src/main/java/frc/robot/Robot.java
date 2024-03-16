@@ -238,8 +238,10 @@ public class Robot extends TimedRobot {
 
     //50 ticks per sec
     //one button flip
-    if(opController.getYButton()){
-      for (int i = 0; i < 152; i++) {
+    if(opController.getYButtonPressed()){
+      
+    }
+    /*  for (int i = 0; i < 152; i++) {
         if(i < 70){//bloop
           shooter.setTargetRPS(3.5);
           intake.setPower(0.9);
@@ -256,15 +258,14 @@ public class Robot extends TimedRobot {
           intake.setPower(0);
           dumper.setPower(0);
         }
-      }
-    }
+      } */
 
-    if(opController.getPOV() == 90){
+    if(opController.getYButton()){
       //dumper.close();
       dumper.setPower(0.15);
     }else if(opController.getXButton()){
       //dumper.open();
-      dumper.setPower(-0.50);
+      dumper.setPower(-0.40);
     }else{
       dumper.setPower(0);
     }
