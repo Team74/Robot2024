@@ -37,12 +37,12 @@ public class Auton_AmpSide_2P extends Auton {
             intake.setPower(0.8);
         } 
         if (intake.hasPiece() == false){
-            currentState = "Drive To Peice";
+            currentState = "Drive To Piece";
         }
         time = 0;
             break;
         
-        case "Drive To Peice":
+        case "Drive To Piece":
         driveBase.driveSetWithGyro(-0.3, 0, 0, 0.9);
         shooter.setPower(0);
         intake.setPower(0);

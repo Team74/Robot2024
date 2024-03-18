@@ -69,6 +69,7 @@ public class Robot extends TimedRobot {
     private static final String auSource_2P = "Source_2_Piece";
     private static final String auShootMove = "Shoot_Move";
     private static final String auCenter_2P = "Center_2_Piece";
+    private static final String auCenter_3P = "Center_3_Piece";
 
     ShuffleboardTab driveTab = Shuffleboard.getTab("Drive3");
     GenericEntry intakePieceField = driveTab.add("Have Piece", false).getEntry();
@@ -85,10 +86,11 @@ public class Robot extends TimedRobot {
     CameraServer.startAutomaticCapture(0);
 
     autonChooser.setDefaultOption("Default Auto", auDefaultAuton);
-    autonChooser.addOption("Right 2 Piece", auAmp_2P);
+    autonChooser.addOption("Amp 2 Piece", auAmp_2P);
     autonChooser.addOption("Shoot and Move", auShootMove);
     autonChooser.addOption("Center 2 Piece", auCenter_2P);
-    autonChooser.addOption("Left 2 Piece", auSource_2P);
+    autonChooser.addOption("Source 2 Piece", auSource_2P);
+    autonChooser.addOption("Center 3 Piece", auSource_2P);
 
     Shuffleboard.getTab("Drive3").add(autonChooser);
     
@@ -112,19 +114,25 @@ public class Robot extends TimedRobot {
     switch(autonSelected){
       case auAmp_2P:
       auton = new Auton_AmpSide_4P(driveTrain, shooter, intake, false);
-      System.out.println("Running Right Auto");
+      System.out.println("Running Amp Auto");
       autoGyroOffset = -54.6; 
       break;
 
       case auSource_2P:
       auton = new Auton_SourceSide_2P(driveTrain, shooter, intake, false);
       autoGyroOffset = -54.6; 
-      System.out.println("Running Left Auto");
+      System.out.println("Running Source Auto");
       break;
 
       case auCenter_2P:
       auton = new Auton_Center_2P(driveTrain, shooter, intake, false);
-      System.out.println("Running Center Auto");
+      System.out.println("Running Center 2 Auto");
+      autoGyroOffset = 0.0;
+      break;
+
+      case auCenter_3P:
+      //auton = new Auton_Center_3P(driveTrain, shooter, intake, false);
+      System.out.println("Running Center 3 Auto");
       autoGyroOffset = 0.0;
       break;
 
@@ -133,7 +141,7 @@ public class Robot extends TimedRobot {
       autoGyroOffset = 0.0;
       break;
     default:
-      System.out.println("Auton Failed, Defualt Auto");
+      System.out.println("Auton Failed, Default Auto");
       auton = new Auton_Move(driveTrain, shooter, intake, false);
       System.out.println("Running No Auto");
       break;

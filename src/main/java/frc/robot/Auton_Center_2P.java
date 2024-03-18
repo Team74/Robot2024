@@ -39,17 +39,17 @@ public class Auton_Center_2P extends Auton {
                     shooter.setPower(0);
                     intake.setPower(0);
                     time = 0;
-                    currentState = "Drive'n To Peice";
+                    currentState = "Drive'n To Piece";
                 }
             }
             
             break;
 
-            case "Drive'n To Peice":
+            case "Drive'n To Piece":
             driveBase.driveSetWithGyro(0, -1, 0, 0.8);
             shooter.setPower(0);
             intake.setPowerUntilPiece(0.8);
-            if (intake.hasPiece() == true || time > 250) {
+            if (intake.hasPiece() == true || time > 150) {
                 driveBase.driveSetWithGyro(0, -1, 0, 0);
                 intake.setPower(0);
                 time = 0;

@@ -39,7 +39,7 @@ public class Auton_AmpSide_4P extends Auton{
         driveBase.driveSetWithGyro(0, 0, 0, 0.7);
         shooter.setTargetRPS(90);
         if(time > 20){
-        shooter.setTargetRPS(80);
+        shooter.setTargetRPS(90);
         intake.setPower(0.8);
         }
         if(time > 50 || intake.hasPiece() == false){
