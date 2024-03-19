@@ -326,26 +326,25 @@ public class Robot extends TimedRobot {
       isRainbow = !isRainbow;
     }
 
-    if(!isRainbow){
-   if(intake.hasPiece()){//green
-    lights.setColor(0, 255, 0);
-    System.out.println("piece in");
-   }else if(intake.hasPieceFar()){//yellow
-    System.out.println("piece close");
-    lights.setColor(255, 200, 0);
-   }else{//team color
-    System.out.println("piece no");
-    if(isBlue){
-      lights.setColor(0, 0, 255);
-    }else{
-      lights.setColor(255, 0, 0);
+    if (!isRainbow) {
+      if (intake.hasPiece()) {// green
+        lights.setColor(0, 255, 0);
+        System.out.println("piece in");
+      } else if (intake.hasPieceFar()) {// yellow
+        System.out.println("piece close");
+        lights.setColor(255, 200, 0);
+      } else {// team color
+        System.out.println("piece no");
+        if (isBlue) {
+          lights.setColor(0, 0, 255);
+        } else {
+          lights.setColor(255, 0, 0);
+        }
+      }
+    } else {
+      lights.rainbow();
     }
-   }
-
-  }else{
-    lights.rainbow();
   }
-}
 
   @Override
   public void disabledInit() {
