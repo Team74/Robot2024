@@ -72,7 +72,7 @@ public class Robot extends TimedRobot {
 
   double autoGyroOffset = 0.0;
 
-  RGBLED lights;
+  RGBLED lights = new RGBLED(3);
 
   // Autons
   private static final String auDefaultAuton = "Default_Auton";
@@ -299,10 +299,14 @@ public class Robot extends TimedRobot {
 
    if(intake.hasPiece()){
     lights.setColor(0, 255, 0);
+    System.out.println("piece in");
    }else if(intake.hasPieceFar()){
-    lights.setColor(255, 255, 0);
+    System.out.println("piece close");
+    lights.setColor(255, 200, 0);
    }else{
+    System.out.println("piece no");
     lights.setColor(255, 0, 0);
+    //lights.rainbow();
    }
 
   }
