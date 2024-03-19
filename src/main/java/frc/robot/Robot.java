@@ -25,6 +25,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.sql.Time;
 
+import javax.swing.text.html.HTMLDocument.BlockElement;
+
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -63,12 +65,14 @@ public class Robot extends TimedRobot {
   XboxController opController = new XboxController(1);
 
   SendableChooser<String> autonChooser = new SendableChooser<>();
+  SendableChooser<String> colorChooser = new SendableChooser<>();
   String autonSelected;
   Timer timer = new Timer();
   Auton auton;
   Double time;
 
   String color = "Red";
+  Boolean isBlue = false;
 
   double autoGyroOffset = 0.0;
 
@@ -85,6 +89,10 @@ public class Robot extends TimedRobot {
   ShuffleboardTab driveTab = Shuffleboard.getTab("Drive3");
   GenericEntry intakePieceField = driveTab.add("Have Piece", false).getEntry();
   GenericEntry gyroAngleField = driveTab.add("Gyro Angle", 0.0).getEntry();
+
+  private static final String colorRed = "Red";
+  private static final String colorBlue = "Blue";
+
 
   /* Start at velocity 0, enable FOC, no feed forward, use slot 0 */
 
@@ -105,7 +113,10 @@ public class Robot extends TimedRobot {
 
     Shuffleboard.getTab("Drive3").add(autonChooser);
 
-   
+    colorChooser.setDefaultOption("Red", colorRed);
+    colorChooser.addOption("Blue", colorBlue);
+    
+    Shuffleboard.getTab("Drive3").add(colorChooser);
 
   }
 
@@ -123,23 +134,29 @@ public class Robot extends TimedRobot {
     timer.reset();
     timer.start();
     autonSelected = autonChooser.getSelected();
+    color = colorChooser.getSelected();
+    if(color == "Blue"){
+      isBlue = true;
+    }else{
+      isBlue = false; 
+    }
     System.out.println(autonSelected);
 
     switch (autonSelected) {
       case auAmp_2P:
-        auton = new Auton_AmpSide_4P(driveTrain, shooter, intake, false);
+        auton = new Auton_AmpSide_4P(driveTrain, shooter, intake, isBlue);
         System.out.println("Running Amp Auto");
         autoGyroOffset = -54.6;
         break;
 
       case auSource_2P:
-        auton = new Auton_SourceSide_2P(driveTrain, shooter, intake, false);
+        auton = new Auton_SourceSide_2P(driveTrain, shooter, intake, isBlue);
         autoGyroOffset = -54.6;
         System.out.println("Running Source Auto");
         break;
 
       case auCenter_2P:
-        auton = new Auton_Center_2P(driveTrain, shooter, intake, false);
+        auton = new Auton_Center_2P(driveTrain, shooter, intake, isBlue);
         System.out.println("Running Center 2 Auto");
         autoGyroOffset = 0.0;
         break;
@@ -151,12 +168,12 @@ public class Robot extends TimedRobot {
         break;
 
       case auShootMove:
-        auton = new Auton_Move(driveTrain, shooter, intake, false);
+        auton = new Auton_Move(driveTrain, shooter, intake, isBlue);
         autoGyroOffset = 0.0;
         break;
       default:
         System.out.println("Auton Failed, Default Auto");
-        auton = new Auton_Move(driveTrain, shooter, intake, false);
+        auton = new Auton_Move(driveTrain, shooter, intake, isBlue);
         System.out.println("Running No Auto");
         break;
     }
@@ -182,6 +199,12 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    color = colorChooser.getSelected();
+    if(color == "Blue"){
+      isBlue = true;
+    }else{
+      isBlue = false; 
+    }
   }
 
   @Override
@@ -297,19 +320,32 @@ public class Robot extends TimedRobot {
     // dumper.rightServo.getAngle());
     System.out.println(driveTrain.gyro.getAngle());
 
-   if(intake.hasPiece()){
+
+    boolean isRainbow = false;
+    if(driverController.controller.getXButtonPressed()){
+      isRainbow = !isRainbow;
+    }
+
+    if(!isRainbow){
+   if(intake.hasPiece()){//green
     lights.setColor(0, 255, 0);
     System.out.println("piece in");
-   }else if(intake.hasPieceFar()){
+   }else if(intake.hasPieceFar()){//yellow
     System.out.println("piece close");
     lights.setColor(255, 200, 0);
-   }else{
+   }else{//team color
     System.out.println("piece no");
-    lights.setColor(255, 0, 0);
-    //lights.rainbow();
+    if(isBlue){
+      lights.setColor(0, 0, 255);
+    }else{
+      lights.setColor(255, 0, 0);
+    }
    }
 
+  }else{
+    lights.rainbow();
   }
+}
 
   @Override
   public void disabledInit() {
