@@ -77,6 +77,7 @@ public class Robot extends TimedRobot {
   double autoGyroOffset = 0.0;
 
   RGBLED lights = new RGBLED(3);
+  boolean isRainbow = false;
 
   // Autons
   private static final String auDefaultAuton = "Default_Auton";
@@ -321,8 +322,7 @@ public class Robot extends TimedRobot {
     System.out.println(driveTrain.gyro.getAngle());
 
 
-    boolean isRainbow = false;
-    if(driverController.controller.getXButtonPressed()){
+    if(driverController.controller.getBButtonPressed()){
       isRainbow = !isRainbow;
     }
 
@@ -332,7 +332,7 @@ public class Robot extends TimedRobot {
         System.out.println("piece in");
       } else if (intake.hasPieceFar()) {// yellow
         System.out.println("piece close");
-        lights.setColor(255, 200, 0);
+        lights.setColor(255, 150, 0);
       } else {// team color
         System.out.println("piece no");
         if (isBlue) {
