@@ -16,11 +16,11 @@ public class Auton_SourceSide_2P extends Auton{
     }
 
     //2 Piece Auto from Amp side position. Start with robot hugging the Speaker
-    public void run(double time){
+    public void run(double time2){
         switch (currentState){
             case "Starting":
             time = 0;
-            driveBase.driveSetWithGyro(0, -1, 0, 0);
+            driveBase.driveSetWithGyro(0,-1, 0, 0);
             intake.setPower(0);
             shooter.setPower(0);
             currentState = "Rev Up 1";
@@ -29,18 +29,21 @@ public class Auton_SourceSide_2P extends Auton{
             case "Rev Up 1":
             shooter.setTargetRPS(80);
             intake.setPower(0);
-            driveBase.driveSetWithGyro(-0.3, 0.1, 0, 1.5);
-            if(time > 55){
+            driveBase.driveSetWithGyro(dir * -0.3, 0.1, 0, 1.5);
+            if(time > 55 || driveBase.gyro.getAngle() < -35.5){
                 currentState = "Shoot Note 1";
                 time = 0;
             }
             break;
     
             case "Shoot Note 1":
-            shooter.setTargetRPS(80);
-            intake.setPower(0.8);
             driveBase.driveSetWithGyro(0, 0, 0, 0.7);
-            if(time > 25 || intake.hasPiece() == false){
+            shooter.setTargetRPS(90);
+            if(time > 20){
+            shooter.setTargetRPS(90);
+            intake.setPower(0.8);
+            }
+            if(time > 50 || intake.hasPiece() == false){
                 currentState = "Spin Back 1";
                 time = 0;
             }
@@ -49,8 +52,8 @@ public class Auton_SourceSide_2P extends Auton{
             case "Spin Back 1":
             shooter.setPower(0);
             intake.setPowerUntilPiece(0);
-            driveBase.driveSetWithGyro(0.3, 0, 0, 0.9);
-            if(time > 90){
+            driveBase.driveSetWithGyro(dir * 0.3, -0.1, 0, 1.5);
+            if(time > 90 || driveBase.gyro.getAngle() > -2){
                 currentState = "Drive to Piece 1";
                 time = 0;
             }
@@ -58,8 +61,17 @@ public class Auton_SourceSide_2P extends Auton{
     
             case "Drive to Piece 1":
             intake.setPowerUntilPiece(0.8);
-            driveBase.driveSetWithGyro(0,-1, -0.55, 0.7);
-            if(time > 75 || intake.hasPiece() == true){
+            driveBase.driveSetWithGyro(0,-1, dir * -0.55, 0.7);
+            if(time > 50 || intake.hasPiece() == true){
+                currentState = "Stop 1";
+                time = 0;
+            }
+            break;
+    
+            case "Stop 1":
+            intake.setPowerUntilPiece(0.8);
+            driveBase.driveSetWithGyro(0,-1, dir * -0.55, 0.0);
+            if(time > 30 || intake.hasPiece() == true){
                 currentState = "Drive Back 1";
                 time = 0;
             }
@@ -68,37 +80,51 @@ public class Auton_SourceSide_2P extends Auton{
             case "Drive Back 1":
             shooter.setPower(0);
             intake.setPowerUntilPiece(0.8);
-            driveBase.driveSetWithGyro(0, 1, 0.55, 0.62);
-            if(time > 50){
+            driveBase.driveSetWithGyro(0, 1, dir * 0.55, 0.62);
+            if(time > 78){
                 currentState = "Spin Back 2";
                 time = 0;
            }
             break;
     
+           
            case "Spin Back 2":
            shooter.setTargetRPS(90);
            intake.setPowerUntilPiece(0.8);
-           driveBase.driveSet(-0.35,0,0,0.9);
-           if(time > 75){
+           driveBase.driveSetWithGyro(dir * -0.35,0,0,0.9);
+           if(time > 88 || driveBase.gyro.getAngle() < -35.5){
                 currentState = "Shoot 2";
                 time = 0;
            }
            break;
     
            case "Shoot 2":
-           shooter.setTargetRPS(90);
-           driveBase.driveSet(0,0,0,0);
-           intake.setPower(0.8);
-           if(time > 50 || intake.hasPiece() == false){
-             currentState = "Leave 1";
+           driveBase.driveSetWithGyro(0, 0.1, 0, 0.7);
+            shooter.setTargetRPS(90);
+            if(time > 20){
+            shooter.setTargetRPS(80);
+            intake.setPower(0.8);
+            }
+            if(time > 50 || intake.hasPiece() == false){
+                currentState = "Leave 0";
                 time = 0;
-           }
+            }
            break;
+
+           case "Leave 0":
+           shooter.setPower(0);
+            intake.setPowerUntilPiece(0);
+            driveBase.driveSetWithGyro(0,0, dir * -0.45, 0.9);
+            if(time > 150){
+                currentState = "Leave 1";
+                time = 0;
+            }
+            break;
     
            case "Leave 1":
            shooter.setPower(0);
             intake.setPowerUntilPiece(0);
-            driveBase.driveSetWithGyro(0.2,-1, -0.55, 0.7);
+            driveBase.driveSetWithGyro(dir * 0.2,-1, dir * -0.45, 0.7);
             if(time > 100){
                 currentState = "Leave 2";
                 time = 0;
@@ -108,8 +134,8 @@ public class Auton_SourceSide_2P extends Auton{
             case "Leave 2":
            shooter.setPower(0);
             intake.setPowerUntilPiece(0);
-            driveBase.driveSetWithGyro(0,-1, -0.15, 1.3);
-            if(time > 75){
+            driveBase.driveSetWithGyro(0,-1, dir * -0.05, 1.3);
+            if(time > 78){
                 currentState = "Grab 1";
                 time = 0;
             }
@@ -118,7 +144,7 @@ public class Auton_SourceSide_2P extends Auton{
             case "Grab 1":
             shooter.setPower(0);
             intake.setPowerUntilPiece(0.8);
-            driveBase.driveSetWithGyro(0,-1, 0, 0.1);
+            driveBase.driveSet(0,-1, 0, 0.1);
             if(time > 40 || intake.hasPiece() == true){
                 currentState = "Back Up 1";
                 time = 0;
@@ -128,8 +154,8 @@ public class Auton_SourceSide_2P extends Auton{
             case "Back Up 1":
             shooter.setPower(0);
             intake.setPowerUntilPiece(0.8);
-            driveBase.driveSetWithGyro(0,1, 0, 0.7);
-            if(time > 50){
+            driveBase.driveSetWithGyro(0,1, dir * 0.1, 0.9);
+            if(time > 60){
                 currentState = "Bloop 1";
                 time = 0;
             }
@@ -160,7 +186,7 @@ public class Auton_SourceSide_2P extends Auton{
             break;
     
         }
-        System.out.println(currentState);
+        System.out.println(currentState + " Time: " + time);
         time++;
 }
     

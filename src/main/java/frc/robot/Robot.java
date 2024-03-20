@@ -322,7 +322,6 @@ public class Robot extends TimedRobot {
     System.out.println(driveTrain.gyro.getAngle());
 
 
-    boolean isRainbow = false;
     if(driverController.controller.getBButtonPressed()){
       isRainbow = !isRainbow;
     }
