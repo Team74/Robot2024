@@ -99,6 +99,12 @@ public class Auton_Center_2P extends Auton {
             intake.setPower(0);
             time = 0;
             break;
+
+            default: 
+            shooter.setPower(0);
+            intake.setPower(0);
+            driveBase.driveSet(0,0, 0, 0);
+            break;
             }
         time++;
     }
