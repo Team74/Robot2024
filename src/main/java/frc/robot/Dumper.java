@@ -17,7 +17,7 @@ public class Dumper {
    int closeEnc, openEnc;
 
      Dumper(int motorID, int encoderID){
-        dumperMotor = new CANSparkMax(motorID, MotorType.kBrushed);
+        dumperMotor = new CANSparkMax(motorID, MotorType.kBrushless);
         encoder = new Encoder(encoderID);
         dumperMotor.setIdleMode(IdleMode.kBrake);
         pidInit();
