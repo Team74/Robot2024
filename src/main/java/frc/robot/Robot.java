@@ -309,10 +309,10 @@ public class Robot extends TimedRobot {
 
     if (opController.getYButton()) {
       // dumper.close();
-      dumper.setPower(0.15);
+      dumper.setPower(0.35);
     } else if (opController.getXButton()) {
       // dumper.open();
-      dumper.setPower(-0.40);
+      dumper.setPower(-0.17);
     } else {
       dumper.setPower(0);
     }
