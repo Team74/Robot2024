@@ -5,6 +5,7 @@ public class Auton_Center_2P extends Auton {
     public Auton_Center_2P(SwerveDrive driveBase, Shooter shooter, Intake intake, boolean isBlue) {
         super(driveBase, shooter, intake, isBlue);
         //TODO Auto-generated constructor stub
+       
     }
     //-y = forward
     
@@ -159,7 +160,7 @@ public class Auton_Center_2P extends Auton {
             break;
 
             case "Leave'n for Piece 4":
-            driveBase.driveSetWithGyro(0, -0.5, 0.85, 0.8);
+            driveBase.driveSetWithGyro(0, -0.5, 0.8, 0.8);
             shooter.setPower(0);
             intake.setPowerUntilPiece(0.8);
             if (time > 70) {

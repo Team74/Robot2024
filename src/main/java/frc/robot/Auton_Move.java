@@ -35,15 +35,15 @@ public class Auton_Move extends Auton {
         driveBase.driveSet(0, 0, 0, 0);
         intake.setPower(0);
         shooter.setPower(0);
-        if (time > 200){
+        if (time > 600){
             currentState = "Move";
             time = 0;
         }
             break;
 
         case "Move":
-        driveBase.driveSet(0, -1, 0, 0.74);
-        if (time > 74){
+        driveBase.driveSet(0, -1, 0, 0.9);
+        if (time > 100){
             time = 0;
             currentState = "Stop";
         }

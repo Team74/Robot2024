@@ -155,7 +155,7 @@ public class Auton_SourceSide_2P extends Auton{
             shooter.setPower(0);
             intake.setPowerUntilPiece(0.8);
             driveBase.driveSetWithGyro(0,1, dir * 0.1, 0.9);
-            if(time > 60){
+            if(time > 85){
                 currentState = "Bloop 1";
                 time = 0;
             }

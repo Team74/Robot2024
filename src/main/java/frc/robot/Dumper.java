@@ -72,7 +72,7 @@ public class Dumper {
        
     }
     void setPower(double power){
-        dumperMotor.set(power);
+        dumperMotor.set(MathUtil.clamp(power, -0.4, 0.4));
     }
 
 }

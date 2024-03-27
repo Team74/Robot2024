@@ -133,7 +133,7 @@ public class SwerveModule {
        // System.out.println(powerFinal);
         //we do this as we dont want to strain motors or batteries when we are at the setpoint. If we don't do this it will set the power to a very small number
         if (!anglePIDController.atSetpoint()) {
-           turnMotorCont.set(1 * MathUtil.clamp(powerFinal, -0.5, 0.5)); //This was changed on 3/15, please test and see if the PID does not like this. It was 0.2
+           turnMotorCont.set(1 * MathUtil.clamp(powerFinal, -0.2, 0.2)); //This was changed on 3/15, please test and see if the PID does not like this. It was 0.2
         } else {
            turnMotorCont.set(0);
         }

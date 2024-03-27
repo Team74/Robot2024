@@ -24,7 +24,7 @@ public class RGBLED {
     void setColor(int r, int g, int b){
         for (var i = 0; i < m_ledBuffer.getLength(); i++) {
             // Sets the specified LED to the RGB values for red
-            m_ledBuffer.setRGB(i, b/2, r/2, g/2);
+            m_ledBuffer.setRGB(i, b/6, r/6, g/6);
          }
          
          m_led.setData(m_ledBuffer);

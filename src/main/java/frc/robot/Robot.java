@@ -108,9 +108,9 @@ public class Robot extends TimedRobot {
     autonChooser.setDefaultOption("Default Auto", auDefaultAuton);
     autonChooser.addOption("Amp 2 Piece", auAmp_2P);
     autonChooser.addOption("Shoot and Move", auShootMove);
-    autonChooser.addOption("Center 2 Piece", auCenter_2P);
+    autonChooser.addOption("Center 4 Piece", auCenter_2P);
     autonChooser.addOption("Source 2 Piece", auSource_2P);
-    autonChooser.addOption("Center 3 Piece", auSource_2P);
+    autonChooser.addOption("Center 3 Piece (Source)", auSource_2P);
 
     Shuffleboard.getTab("Drive3").add(autonChooser);
 
@@ -123,10 +123,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-    if (autonChooser.getSelected() == null || autonChooser.getSelected() == ""
-        || Shuffleboard.getTab("Drive3") == null) {
-      System.out.println("Auton Selector Null");
-    }
+    //if (autonChooser.getSelected() == null || autonChooser.getSelected() == ""
+      //  || Shuffleboard.getTab("Drive3") == null) {
+      //System.out.println("Auton Selector Null");
+    //}
   }
 
   @Override
@@ -157,13 +157,13 @@ public class Robot extends TimedRobot {
         break;
 
       case auCenter_2P:
-        auton = new Auton_Center_2P(driveTrain, shooter, intake, isBlue);
+        auton = new Auton_Center_4P(driveTrain, shooter, intake, isBlue);
         System.out.println("Running Center 2 Auto");
         autoGyroOffset = 0.0;
         break;
 
       case auCenter_3P:
-        // auton = new Auton_Center_3P(driveTrain, shooter, intake, false);
+         auton = new Auton_Center_4P(driveTrain, shooter, intake, false);
         System.out.println("Running Center 3 Auto");
         autoGyroOffset = 0.0;
         break;
@@ -174,7 +174,7 @@ public class Robot extends TimedRobot {
         break;
       default:
         System.out.println("Auton Failed, Default Auto");
-        auton = new Auton_Move(driveTrain, shooter, intake, isBlue);
+        auton = new Auton_Center_4P(driveTrain, shooter, intake, isBlue);
         System.out.println("Running No Auto");
         break;
     }
@@ -236,13 +236,16 @@ public class Robot extends TimedRobot {
     if (opController.getAButton()) {
       shooter.setTargetRPS(90);
 
-    } else if (opController.getBButton()) {
+    }else if(opController.getPOV() == 90){
+      shooter.setTargetRPS(-5);
+
+    }else if (opController.getBButton()) {
       // The velocity is in rotations per second
       shooter.setTargetRPS(3.5); // 3.5
       intake.setPower(0.8);
     } else if (opController.getRightTriggerAxis() > 0.3) {
       shooter.setTargetRPS(90);
-      if (shooter.getRPS() > 88) {
+      if (shooter.getRPS() > 75) {
         intake.setPower(0.9);
       }
     } else {
@@ -253,7 +256,7 @@ public class Robot extends TimedRobot {
     if (opController.getLeftTriggerAxis() > 0.3) { // Intake
       intake.setPower(0.9);
     } else if (opController.getRightBumper()) { // Outtake
-      intake.setPower(-0.2);
+      intake.setPower(-0.5);
     } else if (opController.getLeftBumper()) { // Intake until piece
       intake.setPowerUntilPiece(0.9);
     } else if (!opController.getBButton() && !(opController.getRightTriggerAxis() > 0.3)) { // Stop Motor if no controls and if the shooter is not asking for intake controls
@@ -266,13 +269,13 @@ public class Robot extends TimedRobot {
     } else if (opController.getPOV() == 0) { // Climb Down
       climber.setPowerTogether(0.6);
     } else if (opController.getLeftY() < -0.3) { // Climb Down Left
-      climber.setLeftPower(-0.3);
-    } else if (opController.getRightY() < -0.3) { // Climb Down Right
-      climber.setRightPower(-0.3);
-    } else if (opController.getLeftY() > 0.3) { // Climb Up Left
       climber.setLeftPower(0.3);
-    } else if (opController.getRightY() > 0.3) { // Climb Up Right
+    } else if (opController.getRightY() < -0.3) { // Climb Down Right
       climber.setRightPower(0.3);
+    } else if (opController.getLeftY() > 0.3) { // Climb Up Left
+      climber.setLeftPower(-0.3);
+    } else if (opController.getRightY() > 0.3) { // Climb Up Right
+      climber.setRightPower(-0.3);
     } else { // Turn off power
       climber.setPowerTogether(0);
     }
@@ -309,17 +312,17 @@ public class Robot extends TimedRobot {
 
     if (opController.getYButton()) {
       // dumper.close();
-      dumper.setPower(0.35);
+      dumper.setPower(-0.17);
     } else if (opController.getXButton()) {
       // dumper.open();
-      dumper.setPower(-0.17);
+      dumper.setPower(0.35);
     } else {
       dumper.setPower(0);
     }
 
     // System.out.println("Left: " + dumper.leftServo.getAngle() + " Right: " +
     // dumper.rightServo.getAngle());
-    System.out.println(driveTrain.gyro.getAngle());
+    System.out.println("angle " + driveTrain.gyro.getAngle());
 
 
     if(driverController.controller.getBButtonPressed()){

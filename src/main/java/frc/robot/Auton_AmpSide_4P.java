@@ -149,7 +149,7 @@ public class Auton_AmpSide_4P extends Auton{
         shooter.setPower(0);
         intake.setPowerUntilPiece(0.8);
         driveBase.driveSetWithGyro(0,1, dir * -0.1, 0.9);
-        if(time > 60){
+        if(time > 80){
             currentState = "Bloop 1";
             time = 0;
         }
