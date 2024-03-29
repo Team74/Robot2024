@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 public class Intake {
        CANSparkMax intakeTop, intakeBottom;
-       DigitalInput limitSensor = new DigitalInput(4);
+       DigitalInput limitSensor = new DigitalInput(8);
         DigitalInput limitSensorFar = new DigitalInput(9);
 
 
