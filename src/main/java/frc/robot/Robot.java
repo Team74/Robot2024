@@ -157,7 +157,7 @@ public class Robot extends TimedRobot {
         break;
 
       case auCenter_2P:
-        auton = new Auton_Center_4P(driveTrain, shooter, intake, isBlue);
+        auton = new Auton_Center_2P(driveTrain, shooter, intake, isBlue);
         System.out.println("Running Center 2 Auto");
         autoGyroOffset = 0.0;
         break;

@@ -47,7 +47,7 @@ public class Auton_Center_2P extends Auton {
             break;
 
             case "Drive'n To Piece":
-            driveBase.driveSetWithGyro(0, -1, 0, 0.8);
+            driveBase.driveSetWithGyro(0, -1, 0, 0.85);
             shooter.setPower(0);
             intake.setPowerUntilPiece(0.8);
             if (intake.hasPiece() == true || time > 70) {
@@ -69,8 +69,8 @@ public class Auton_Center_2P extends Auton {
             
             case "Drive'n Back":
             if (intake.hasPiece() == true) {
-               driveBase.driveSetWithGyro(0, 1, 0, 0.7);
-                if (time > 80) {
+               driveBase.driveSetWithGyro(0, 1, 0, 0.75);
+                if (time > 77) {
                     driveBase.driveSetWithGyro(0, -1, 0, 0);
                     currentState = "Shoote'n Again";
                     time = 0;
