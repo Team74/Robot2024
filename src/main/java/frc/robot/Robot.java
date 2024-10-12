@@ -243,7 +243,7 @@ public class Robot extends TimedRobot {
       // The velocity is in rotations per second
       shooter.setTargetRPS(3.5); // 3.5
       intake.setPower(0.8);
-    } else if (driverController.controller.getRightTriggerAxis() > 0.3) {
+    } else if (opController.getRightTriggerAxis() > 0.3) {
       shooter.setTargetRPS(90);
       if (shooter.getRPS() > 75) {
         intake.setPower(0.9);
@@ -253,9 +253,9 @@ public class Robot extends TimedRobot {
     }
 
     // Intake Controls
-    if (driverController.controller.getLeftTriggerAxis() > 0.3) { // Intake
+    if(opController.getLeftTriggerAxis() > 0.3) { // Intake
       intake.setPower(0.9);
-    } else if (driverController.controller.getPOV() == 270) { // Outtake
+    } else if (opController.getRightBumper()) { // Outtake
       intake.setPower(-0.5);
     } else if (opController.getLeftBumper()) { // Intake until piece
       intake.setPowerUntilPiece(0.9);
