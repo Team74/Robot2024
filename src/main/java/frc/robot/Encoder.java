@@ -7,7 +7,8 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 
 public class Encoder {
-    //This is a seperate class in order to be easier to refactor with new encoders. 
+    
+    //This is a separate class in order to be easier to refactor with new encoders. 
     
     DutyCycleEncoder  encoder; //this would have to be a digital if the encoder was digital
 
@@ -28,6 +29,7 @@ public class Encoder {
         return (int) Math.round(encoder.getAbsolutePosition() * 4096);
     }
 
+    //Gets the current value. Unused I believe 
     double getDoubleValue()
     {
         return encoder.getAbsolutePosition();

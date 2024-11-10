@@ -53,6 +53,7 @@ public class Robot extends TimedRobot {
    * initialization code.
    */
 
+   //initializing a bunch of classes
   SwerveDrive driveTrain;
   Dumper dumper = new Dumper(29, 6);
   Climber climber = new Climber(4, 33);
@@ -64,18 +65,22 @@ public class Robot extends TimedRobot {
   Encoder testEncoder = new Encoder(5);
   XboxController opController = new XboxController(1);
 
-  SendableChooser<String> autonChooser = new SendableChooser<>();
+  //auton stuff 
+  SendableChooser<String> autonChooser = new SendableChooser<>(); //for shuffleboard
   SendableChooser<String> colorChooser = new SendableChooser<>();
   String autonSelected;
   Timer timer = new Timer();
   Auton auton;
   Double time;
 
+  //used for leds and auton
   String color = "Red";
   Boolean isBlue = false;
 
+  //I believe this goes unused 
   double autoGyroOffset = 0.0;
 
+  //led stuff
   RGBLED lights = new RGBLED(3);
   boolean isRainbow = false;
 
@@ -87,6 +92,7 @@ public class Robot extends TimedRobot {
   private static final String auCenter_2P = "Center_2_Piece";
   private static final String auCenter_3P = "Center_3_Piece";
 
+  //add to the shuffleboard 
   ShuffleboardTab driveTab = Shuffleboard.getTab("Drive3");
   GenericEntry intakePieceField = driveTab.add("Have Piece", false).getEntry();
   GenericEntry gyroAngleField = driveTab.add("Gyro Angle", 0.0).getEntry();
@@ -99,12 +105,16 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
+    //create the drive train
     driveTrain = new SwerveDrive();
     // testSwerveModule = new SwerveModule(5, 14, 0);
     driverController = new DriverController(driveTrain);
     // driveTrain.driveSet(0, 0.5,0.5, 0.5);
+
+    //Init Camera
     CameraServer.startAutomaticCapture(0);
 
+    //Add everything to the shuffleboard, including this "spinner" (dropdown menu)
     autonChooser.setDefaultOption("Default Auto", auDefaultAuton);
     autonChooser.addOption("Amp 2 Piece", auAmp_2P);
     autonChooser.addOption("Shoot and Move", auShootMove);
@@ -123,6 +133,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
+  
+    //this was to fix a bug where the spinner would not show up. If this happens then def look into it.
+    //This ended up going unused 
+
     //if (autonChooser.getSelected() == null || autonChooser.getSelected() == ""
       //  || Shuffleboard.getTab("Drive3") == null) {
       //System.out.println("Auton Selector Null");
@@ -131,10 +145,16 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    //reset the gyro so forward is forward.
+    //This is where the unused code for the offset was going to be used
+    //The idea of the offset is to make it so if the robot starts not facing forward, it still knows where forward is.
+    //I would look into the offset if you have time and it is needed
     driveTrain.resetGyro();
+    //Timer init
     timer.reset();
     timer.start();
     autonSelected = autonChooser.getSelected();
+    //It was a flipped field, so you have to flip left/right 
     color = colorChooser.getSelected();
     if(color == "Blue"){
       isBlue = true;
@@ -143,11 +163,13 @@ public class Robot extends TimedRobot {
     }
     System.out.println(autonSelected);
 
+    //Auton class init. Each sub class of auton extends the main class so you can do this
+    //System.out is your friend!
     switch (autonSelected) {
       case auAmp_2P:
         auton = new Auton_AmpSide_4P(driveTrain, shooter, intake, isBlue);
         System.out.println("Running Amp Auto");
-        autoGyroOffset = -54.6;
+        autoGyroOffset = -54.6; //again, unused 
         break;
 
       case auSource_2P:
@@ -183,6 +205,7 @@ public class Robot extends TimedRobot {
     // driver station. Don't need a offset for center spot.
     // TODO check if the gyro is good after auton
     if (autoGyroOffset != 0.0) {
+      //Again, unused. This code is the same as reset gyro without offset
       driveTrain.resetGyroWithOffset(autoGyroOffset);
     } else {
       driveTrain.resetGyro();
@@ -192,6 +215,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousPeriodic() {
+    //Update timer
     time = timer.get();
     if (auton != null) {
       auton.run(time);
@@ -200,6 +224,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    //This was for the cool leds 
     color = colorChooser.getSelected();
     if(color == "Blue"){
       isBlue = true;
@@ -213,12 +238,16 @@ public class Robot extends TimedRobot {
     // driveTrain.driveSet(0, -1, 0, 0.3);
     // frontRight.setDrive(0.25);
 
+    //Run the driver controller. I dont think it needs to be in its own class but it does not really matter
     driverController.run();
-    RelativeEncoder relativeEncoder = driveTrain.backLeft.driveMotorCont.getEncoder();
-    System.out.println(relativeEncoder.getVelocity());
 
+    //This was for debug
     // Stuff to test if swerve is going max speed
-    System.out.println(intake.hasPieceFar());
+    //RelativeEncoder relativeEncoder = driveTrain.backLeft.driveMotorCont.getEncoder();
+    //System.out.println(relativeEncoder.getVelocity());
+
+    //again, debug
+    //System.out.println(intake.hasPieceFar());
 
     // testSwerveModule.setModulePower(1, 0);
     // System.out.println(testEncoder.getDoubleValue());
@@ -234,22 +263,24 @@ public class Robot extends TimedRobot {
 
     // Shooter Controls
     if (opController.getAButton()) {
-      shooter.setTargetRPS(90);
+      shooter.setTargetRPS(90); //rev up
 
-    }else if(opController.getPOV() == 90){
+    }else if(opController.getPOV() == 90){ //outtake
       shooter.setTargetRPS(-5);
 
-    }else if (opController.getBButton()) {
+    }else if (opController.getBButton()) { //spit out
       // The velocity is in rotations per second
       shooter.setTargetRPS(3.5); // 3.5
       intake.setPower(0.8);
-    } else if (opController.getRightTriggerAxis() > 0.3) {
+    } else if (opController.getRightTriggerAxis() > 0.3) { //auto shoot
       shooter.setTargetRPS(90);
       if (shooter.getRPS() > 75) {
         intake.setPower(0.9);
       }
     } else {
-      shooter.setPower(0.0);
+      //if nothing, turn off. very important. 
+      //Note that it is power to 0, not rps to zero. If it was rps to zero, it will break HARD (learned the hard way)
+      shooter.setPower(0.0); 
     }
 
     // Intake Controls
@@ -287,7 +318,7 @@ public class Robot extends TimedRobot {
     // 50 ticks per sec
     // one button flip
     if (opController.getYButtonPressed()) {
-
+      //Unused, this would be for auto dumper
     }
     /*
      * for (int i = 0; i < 152; i++) {
@@ -310,6 +341,7 @@ public class Robot extends TimedRobot {
      * }
      */
 
+    //Dumper open and close
     if (opController.getYButton()) {
       // dumper.close();
       dumper.setPower(-0.17);
@@ -317,18 +349,22 @@ public class Robot extends TimedRobot {
       // dumper.open();
       dumper.setPower(0.35);
     } else {
+      //Again, very important
       dumper.setPower(0);
     }
 
     // System.out.println("Left: " + dumper.leftServo.getAngle() + " Right: " +
     // dumper.rightServo.getAngle());
-    System.out.println("angle " + driveTrain.gyro.getAngle());
+    //System.out.println("angle " + driveTrain.gyro.getAngle());
 
 
+    //Rainbow LEDs, very important
     if(driverController.controller.getBButtonPressed()){
       isRainbow = !isRainbow;
     }
 
+    //Led control. 
+    //If not rainbow, then set the color based on if we have the piece or team color
     if (!isRainbow) {
       if (intake.hasPiece()) {// green
         lights.setColor(0, 255, 0);
@@ -349,30 +385,24 @@ public class Robot extends TimedRobot {
     }
   }
 
+  //Unused, but you have to have this
   @Override
-  public void disabledInit() {
-    dumper.setSpeed();
-  }
+  public void disabledInit() {  }
 
   @Override
-  public void disabledPeriodic() {
-  }
+  public void disabledPeriodic() {  }
 
   @Override
-  public void testInit() {
-  }
+  public void testInit() {  }
 
   @Override
-  public void testPeriodic() {
-  }
+  public void testPeriodic() {  }
 
   @Override
-  public void simulationInit() {
-  }
+  public void simulationInit() {  }
 
   @Override
-  public void simulationPeriodic() {
-  }
+  public void simulationPeriodic() {  }
 
   
 

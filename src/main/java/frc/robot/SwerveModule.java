@@ -18,10 +18,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SwerveModule {
 
-    //Adding the tabs to the SuffleBoard. Some off these are inputs for the PID Loop
+    //This is the code for the swerve module. There is a lot of math I don't remember (its been a while lol)
+    //For whoever is reading this, I am sorry this is not very readable. My first time writing swerve code under time pressure lol
+
+    //Adding the tabs to the ShuffleBoard. Some off these are inputs for the PID Loop
 
     public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, tol;
     Encoder testEncoder;
+    //New PID controllers. Check online or auton handbook for it
     PIDController anglePIDController = new PIDController(0, 0, 0.05);
     PIDController drivePIDController = new PIDController(0, 0, 0.05);
     double lastTarget;
@@ -35,21 +39,25 @@ public class SwerveModule {
 
     GenericEntry currentDisplayField;
 
+    //This inits the swerve module
     SwerveModule(int driveId, int turnId, int encoderId, int offset, GenericEntry currentDisplay) {
         turnMotorCont = new CANSparkMax(turnId, MotorType.kBrushless);
         driveMotorCont = new CANSparkMax(driveId, MotorType.kBrushless);
         testEncoder = new Encoder(encoderId);
         testEncoder.encoderInit();
         PIDInit();
-        encoderOffset = offset;
+        encoderOffset = offset; //The mods do not always point forward due to them being build by humans and not machines 
     }
 
+    //This function will send the target angle to the other function, then set the target speed of the wheel
     void setDrive(double driveSpeed, Rotation2d turnAngle, double powerMulti, Boolean print) {
         targetAngle = (int) ((turnAngle.getRadians() - Math.PI) * (float) testEncoder.encoderMax/ (-2.0 * Math.PI)); //convert the radians to encoder tick
+       //IIRC this is to change the "forward" direction by 90 degrees while also changing the range
         targetAngle = (targetAngle + testEncoder.encoderMax/2) % testEncoder.encoderMax;
-        setAngleMotorPower(targetAngle, print); //set the motor power 
+        setAngleMotorPower(targetAngle, print); //set the motor power for angle
 
-        targetSpeed = MathUtil.clamp(driveSpeed,-0.95,0.95) * 5600 * 0.1; //driver speed gives -1 to 1, multiply by encoder ticks, then speed multiplier
+
+        targetSpeed = MathUtil.clamp(driveSpeed,-0.95,0.95) * 5600 * 0.1; //driver speed gives -1 to 1, multiply by encoder ticks, then speed multiplier?
         drivePID.setReference(targetSpeed * powerMulti, CANSparkMax.ControlType.kVelocity); //set reference as it is velocity not position 
 
         //if you want to print something to console, do it here.
@@ -59,17 +67,14 @@ public class SwerveModule {
     }
 
     int getEncoderAngle() {
-        //System.out.println("Test 1: " + testEncoder.getAverageValue());
         return ((testEncoder.getAverageValue() - encoderOffset) + testEncoder.encoderMax)% 4096; //we get it from this so if the encoder changes it wont effect this class. Mod so it rolls over
     }
     double getEncoderAngleRadians() //converts the encoder ticks to radians
     { 
        if(getEncoderAngle() < 2048){
-        //System.out.println("Value Less them 2048, " + getEncoderAngle());
         return -((double) getEncoderAngle()/((double) testEncoder.encoderMax/2.0)) * Math.PI;
        }else{
         double rad = ((double) testEncoder.encoderMax - (double) getEncoderAngle())/( (double) testEncoder.encoderMax/2.0) * Math.PI;
-        //System.out.println("Value More them 2048, " + getEncoderAngle() + " Rad: " + rad);
         return rad;
        }
     }
@@ -87,6 +92,7 @@ public class SwerveModule {
         driveMotorCont.restoreFactoryDefaults(); //clear the previous PID Loop. This is bc the drive motor PID is on the controller
         drivePID = driveMotorCont.getPIDController(); 
 
+        //IDK why I did not hardcode it
         //PID for the drive controller
         kP = 0.000000; 
         kI = 0;
@@ -106,6 +112,7 @@ public class SwerveModule {
         driveMotorCont.burnFlash();
     }
 
+    //This went mostly unused 
     //These are called from the Swerve Drive Class
     void setPIDP(double p, double driveP){
         anglePIDController.setP(p);
@@ -130,7 +137,6 @@ public class SwerveModule {
         //dont call calc 2 times in one cycle, it does not like it 
         double calc = anglePIDController.calculate(getEncoderAngle(), targetAngle); //get the pid power
         powerFinal = (calc); //power multi is the "gear" system, speed up / slow down
-       // System.out.println(powerFinal);
         //we do this as we dont want to strain motors or batteries when we are at the setpoint. If we don't do this it will set the power to a very small number
         if (!anglePIDController.atSetpoint()) {
            turnMotorCont.set(1 * MathUtil.clamp(powerFinal, -0.2, 0.2)); //This was changed on 3/15, please test and see if the PID does not like this. It was 0.2
